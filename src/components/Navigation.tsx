@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Activity, Shield, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +54,7 @@ const Navigation = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
@@ -109,6 +111,9 @@ const Navigation = () => {
             ))}
             
             <div className="pt-4 space-y-2">
+              <div className="flex justify-center py-2">
+                <ThemeToggle />
+              </div>
               {user ? (
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 py-2">
