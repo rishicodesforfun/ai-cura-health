@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,14 +21,7 @@ const Index = () => {
     image: null as File | null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { toast } = useToast();
-
-  // Check if user is logged in
-  useEffect(() => {
-    const userData = localStorage.getItem("aicura_current_user");
-    setIsLoggedIn(!!userData);
-  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -45,28 +38,17 @@ const Index = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Check if user is logged in
-    if (!isLoggedIn) {
-      toast({
-        title: "Please Sign In",
-        description: "You need to create an account to save your health records.",
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
     // Get current user
     const currentUser = JSON.parse(localStorage.getItem("aicura_current_user") || "{}");
     
     // Create health record
     const healthRecord = {
       id: Date.now().toString(),
-      userId: currentUser.id,
-      name: formData.name || currentUser.name,
-      age: formData.age || currentUser.age,
-      gender: formData.gender || currentUser.gender,
-      weight: formData.weight || currentUser.weight,
+      userId: currentUser.id || "guest",
+      name: formData.name || (currentUser.name || "Guest User"),
+      age: formData.age || (currentUser.age || ""),
+      gender: formData.gender || (currentUser.gender || ""),
+      weight: formData.weight || (currentUser.weight || ""),
       symptoms: formData.symptoms,
       image: formData.image,
       createdAt: new Date().toISOString(),
@@ -105,44 +87,17 @@ const Index = () => {
               <Calendar className="h-4 w-4" />
               History
             </Button>
-            {!isLoggedIn ? (
-              <Button 
-                onClick={() => window.location.href = "/signup"}
-                className="flex items-center gap-2"
-              >
-                <User className="h-4 w-4" />
-                Sign Up
-              </Button>
-            ) : (
-              <Button 
-                variant="outline"
-                onClick={() => {
-                  localStorage.removeItem("aicura_current_user");
-                  setIsLoggedIn(false);
-                  window.location.reload();
-                }}
-              >
-                Sign Out
-              </Button>
-            )}
+            <Button 
+              variant="outline"
+              onClick={() => {
+                localStorage.removeItem("aicura_current_user");
+                window.location.href = "/login";
+              }}
+            >
+              Sign Out
+            </Button>
           </div>
         </div>
-
-        {!isLoggedIn && (
-          <Card className="mb-8 border-blue-200 bg-blue-50">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-blue-600" />
-                <p className="text-blue-800">
-                  Create an account to save your health history and get better diagnoses over time!
-                </p>
-                <Button onClick={() => window.location.href = "/signup"} size="sm">
-                  Sign Up Now
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Main Form */}
         <div className="max-w-4xl mx-auto">

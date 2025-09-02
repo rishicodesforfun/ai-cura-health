@@ -103,13 +103,13 @@ const Signup = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
             <p className="text-gray-600 mb-6">
-              Your AIcura account has been successfully created. You can now sign in and start using our services.
+              Your AIcura account has been successfully created. Please sign in to continue.
             </p>
             <Button 
-              onClick={() => window.location.href = "/"} 
+              onClick={() => window.location.href = "/login"} 
               className="w-full"
             >
-              Go to Home
+              Go to Login
             </Button>
           </CardContent>
         </Card>
