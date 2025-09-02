@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, User, Calendar, Weight, AlertTriangle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,14 @@ const Index = () => {
     image: null as File | null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { toast } = useToast();
+
+  // Check if user is logged in
+  useEffect(() => {
+    const userData = localStorage.getItem("aicura_current_user");
+    setIsLoggedIn(!!userData);
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -36,10 +45,42 @@ const Index = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      toast({
+        title: "Please Sign In",
+        description: "You need to create an account to save your health records.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem("aicura_current_user") || "{}");
+    
+    // Create health record
+    const healthRecord = {
+      id: Date.now().toString(),
+      userId: currentUser.id,
+      name: formData.name || currentUser.name,
+      age: formData.age || currentUser.age,
+      gender: formData.gender || currentUser.gender,
+      weight: formData.weight || currentUser.weight,
+      symptoms: formData.symptoms,
+      image: formData.image,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to localStorage
+    const existingRecords = JSON.parse(localStorage.getItem("aicura_health_records") || "[]");
+    existingRecords.push(healthRecord);
+    localStorage.setItem("aicura_health_records", JSON.stringify(existingRecords));
+
     // Simulate AI processing
     setTimeout(() => {
       setIsSubmitting(false);
-      // Navigate to results page (will be created next)
+      // Navigate to results page
       window.location.href = "/results";
     }, 3000);
   };
@@ -48,12 +89,60 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AIcura</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Intelligent Preliminary Disease Identification System - Get instant health insights based on your symptoms
-          </p>
+        <div className="flex items-center justify-between mb-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">AIcura</h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Intelligent Preliminary Disease Identification System - Get instant health insights based on your symptoms
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => window.location.href = "/history"}
+              className="flex items-center gap-2"
+            >
+              <Calendar className="h-4 w-4" />
+              History
+            </Button>
+            {!isLoggedIn ? (
+              <Button 
+                onClick={() => window.location.href = "/signup"}
+                className="flex items-center gap-2"
+              >
+                <User className="h-4 w-4" />
+                Sign Up
+              </Button>
+            ) : (
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  localStorage.removeItem("aicura_current_user");
+                  setIsLoggedIn(false);
+                  window.location.reload();
+                }}
+              >
+                Sign Out
+              </Button>
+            )}
+          </div>
         </div>
+
+        {!isLoggedIn && (
+          <Card className="mb-8 border-blue-200 bg-blue-50">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-blue-600" />
+                <p className="text-blue-800">
+                  Create an account to save your health history and get better diagnoses over time!
+                </p>
+                <Button onClick={() => window.location.href = "/signup"} size="sm">
+                  Sign Up Now
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Form */}
         <div className="max-w-4xl mx-auto">
@@ -210,21 +299,21 @@ const Index = () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Convenient Access</CardTitle>
+                <CardTitle className="text-lg">Health History Tracking</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Access health insights from the comfort of your home
+                  Save your health records and track symptom patterns over time
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Actionable Guidance</CardTitle>
+                <CardTitle className="text-lg">Data-Driven Improvements</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Receive clear next steps and links to professional help
+                  Your data helps train better AI models for more accurate diagnoses
                 </p>
               </CardContent>
             </Card>
