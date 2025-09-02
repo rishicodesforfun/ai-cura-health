@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Lock, AlertCircle } from "lucide-react";
+import { generateToken, setAuthToken } from "@/lib/jwt";
 
 interface SignupData {
   name: string;
@@ -81,6 +82,7 @@ const Signup = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
+      
       // Store user data in localStorage for demo purposes
       const userData = {
         ...formData,
@@ -90,6 +92,27 @@ const Signup = () => {
       const existingUsers = JSON.parse(localStorage.getItem("aicura_users") || "[]");
       existingUsers.push(userData);
       localStorage.setItem("aicura_users", JSON.stringify(existingUsers));
+      
+      // Generate JWT token for the new user
+      const token = generateToken({
+        id: userData.id,
+        email: userData.email,
+        name: userData.name
+      });
+      
+      // Store JWT token
+      setAuthToken(token);
+      
+      // Also store current user session for convenience
+      const currentUser = {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        age: userData.age,
+        gender: userData.gender,
+        weight: userData.weight
+      };
+      localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
     }, 2000);
   };
 
@@ -103,13 +126,10 @@ const Signup = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
             <p className="text-gray-600 mb-6">
-              Your AIcura account has been successfully created. Please sign in to continue.
+              Your AIcura account has been successfully created. You're now logged in and will be redirected to your dashboard.
             </p>
-            <Button 
-              onClick={() => window.location.href = "/login"} 
-              className="w-full"
-            >
-              Go to Login
+            <Button onClick={() => window.location.href = "/"} className="w-full">
+              Go to Dashboard
             </Button>
           </CardContent>
         </Card>

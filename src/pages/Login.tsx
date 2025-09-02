@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Lock, AlertCircle, Eye, EyeOff, AlertTriangle } from "lucide-react";
+import { generateToken, setAuthToken } from "@/lib/jwt";
 
 interface LoginData {
   email: string;
@@ -25,9 +26,9 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const userData = localStorage.getItem("aicura_current_user");
-    if (userData) {
+    // Check if user is already logged in by verifying JWT
+    const token = localStorage.getItem('aicura_jwt_token');
+    if (token) {
       setIsLoggedIn(true);
     }
   }, []);
@@ -63,7 +64,17 @@ const Login = () => {
       
       if (user) {
         setIsSubmitting(false);
-        // Store current user session
+        // Generate JWT token
+        const token = generateToken({
+          id: user.id,
+          email: user.email,
+          name: user.name
+        });
+        
+        // Store JWT token
+        setAuthToken(token);
+        
+        // Also store current user session for convenience
         const currentUser = {
           id: user.id,
           name: user.name,
@@ -73,6 +84,7 @@ const Login = () => {
           weight: user.weight
         };
         localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
+        
         setIsLoggedIn(true);
         window.location.href = "/";
       } else {
@@ -83,6 +95,7 @@ const Login = () => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("aicura_jwt_token");
     localStorage.removeItem("aicura_current_user");
     setIsLoggedIn(false);
     window.location.reload();

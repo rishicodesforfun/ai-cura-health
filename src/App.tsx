@@ -9,11 +9,12 @@ import Signup from "./pages/Signup";
 import History from "./pages/History";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import { getCurrentUser } from "./lib/jwt";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = localStorage.getItem("aicura_current_user");
+  const isAuthenticated = !!getCurrentUser();
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 

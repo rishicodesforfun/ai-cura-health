@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, User, Calendar, Weight, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { removeAuthToken } from "@/lib/jwt";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -67,6 +68,12 @@ const Index = () => {
     }, 3000);
   };
 
+  const handleLogout = () => {
+    removeAuthToken();
+    localStorage.removeItem("aicura_current_user");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
@@ -89,11 +96,10 @@ const Index = () => {
             </Button>
             <Button 
               variant="outline"
-              onClick={() => {
-                localStorage.removeItem("aicura_current_user");
-                window.location.href = "/login";
-              }}
+              onClick={handleLogout}
+              className="flex items-center gap-2"
             >
+              <User className="h-4 w-4" />
               Sign Out
             </Button>
           </div>
