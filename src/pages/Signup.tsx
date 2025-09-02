@@ -18,7 +18,7 @@ interface SignupData {
   age: string;
   gender: string;
   weight: string;
-  height: string; // Added height field
+  height: string;
 }
 
 const Signup = () => {
@@ -30,7 +30,7 @@ const Signup = () => {
     age: "",
     gender: "",
     weight: "",
-    height: "", // Initialize height field
+    height: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -84,7 +84,6 @@ const Signup = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
@@ -117,7 +116,7 @@ const Signup = () => {
         age: userData.age,
         gender: userData.gender,
         weight: userData.weight,
-        height: userData.height, // Include height in current user session
+        height: userData.height,
       };
       localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
     }, 2000);
@@ -125,11 +124,11 @@ const Signup = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-8 w-8 text-green-600" />
+            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="h-8 w-8 text-purple-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
             <p className="text-gray-600 mb-6">
@@ -145,160 +144,256 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AIcura</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Create your account to save your health history and get better diagnoses over time
-          </p>
+    <div className="min-h-screen relative overflow-hidden bg-black">
+      {/* Dynamic Background with Particles and Light Trails */}
+      <div className="absolute inset-0 z-0">
+        {/* Base dark gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+        
+        {/* Animated Particles */}
+        <div className="absolute inset-0">
+          {[...Array(80)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDuration: `${2 + Math.random() * 4}s`,
+                animationDelay: `${Math.random() * 2}s`,
+                opacity: Math.random() * 0.8 + 0.2,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Signup Form */}
-        <div className="max-w-md mx-auto">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-6 w-6 text-blue-600" />
-                Create Account
-              </CardTitle>
-              <CardDescription>
-                Sign up to save your health records and track your symptoms over time
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
+        {/* Light Trails */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1920 1080">
+          <defs>
+            <linearGradient id="neonGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#a855f7" />
+              <stop offset="100%" stopColor="#8b5cf6" />
+            </linearGradient>
+            <linearGradient id="neonGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#a855f7" />
+            </linearGradient>
+          </defs>
+          
+          {/* Swirling light trails */}
+          {[...Array(25)].map((_, i) => {
+            const startX = Math.random() * 1920;
+            const startY = Math.random() * 1080;
+            const endX = Math.random() * 1920;
+            const endY = Math.random() * 1080;
+            const midX = (startX + endX) / 2 + (Math.random() - 0.5) * 400;
+            const midY = (startY + endY) / 2 + (Math.random() - 0.5) * 400;
+            
+            return (
+              <path
+                key={i}
+                d={`M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`}
+                stroke={i % 2 === 0 ? "url(#neonGradient1)" : "url(#neonGradient2)"}
+                strokeWidth="0.5"
+                fill="none"
+                opacity="0.3"
+                className="animate-pulse"
+                style={{
+                  animationDuration: `${3 + Math.random() * 5}s`,
+                  animationDelay: `${Math.random() * 3}s`,
+                }}
+              />
+            );
+          })}
+          
+          {/* Glowing nodes */}
+          {[...Array(20)].map((_, i) => (
+            <circle
+              key={i}
+              cx={Math.random() * 1920}
+              cy={Math.random() * 1080}
+              r="1.5"
+              fill="#a855f7"
+              className="animate-pulse"
+              style={{
+                animationDuration: `${2 + Math.random() * 3}s`,
+                animationDelay: `${Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </svg>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          {/* Logo and Title */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
+              <span className="text-3xl font-bold text-black">AI</span>
+            </div>
+            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">AICURA</h1>
+            <p className="text-purple-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
+          </div>
+
+          {/* Glassmorphism Panel */}
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-semibold text-white mb-2">Create Account</h2>
+              <p className="text-gray-300 text-sm">Sign up to save your health records and track your symptoms over time</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive" className="bg-red-500/20 border-red-500/30">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-white">{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {/* Personal Information */}
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-gray-200 text-sm font-medium">Full Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  required
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-200 text-sm font-medium">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  required
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-200 text-sm font-medium">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Create a password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  required
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-gray-200 text-sm font-medium">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                  required
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                />
+              </div>
+
+              {/* Health Information */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="age" className="text-gray-200 text-sm font-medium">Age</Label>
+                  <Input
+                    id="age"
+                    type="number"
+                    placeholder="Age"
+                    value={formData.age}
+                    onChange={(e) => handleInputChange("age", e.target.value)}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="gender" className="text-gray-200 text-sm font-medium">Gender</Label>
+                  <select
+                    id="gender"
+                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                    value={formData.gender}
+                    onChange={(e) => handleInputChange("gender", e.target.value)}
+                    required
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="height" className="text-gray-200 text-sm font-medium">Height (cm)</Label>
+                  <Input
+                    id="height"
+                    type="number"
+                    placeholder="Height in cm"
+                    value={formData.height}
+                    onChange={(e) => handleInputChange("height", e.target.value)}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weight" className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    placeholder="Weight in kg"
+                    value={formData.weight}
+                    onChange={(e) => handleInputChange("weight", e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Creating Account...
+                  </div>
+                ) : (
+                  "Create Account"
                 )}
+              </Button>
+            </form>
+          </div>
 
-                {/* Personal Information */}
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                    required
-                  />
-                </div>
-
-                {/* Health Information */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="age">Age</Label>
-                    <Input
-                      id="age"
-                      type="number"
-                      placeholder="Age"
-                      value={formData.age}
-                      onChange={(e) => handleInputChange("age", e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="gender">Gender</Label>
-                    <select
-                      id="gender"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      value={formData.gender}
-                      onChange={(e) => handleInputChange("gender", e.target.value)}
-                      required
-                    >
-                      <option value="">Select gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="height">Height (cm)</Label>
-                    <Input
-                      id="height"
-                      type="number"
-                      placeholder="Height in cm"
-                      value={formData.height}
-                      onChange={(e) => handleInputChange("height", e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (kg)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      placeholder="Weight in kg"
-                      value={formData.weight}
-                      onChange={(e) => handleInputChange("weight", e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Creating Account...
-                    </div>
-                  ) : (
-                    "Create Account"
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          {/* Sign In Link */}
+          <div className="text-center mt-6">
+            <button
+              type="button"
+              className="text-purple-300 hover:text-purple-200 text-sm transition-colors"
+              onClick={() => window.location.href = "/login"}
+            >
+              Already have an account? Sign In
+            </button>
+          </div>
         </div>
+      </div>
 
+      {/* Made with Dyad */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
         <MadeWithDyad />
       </div>
     </div>

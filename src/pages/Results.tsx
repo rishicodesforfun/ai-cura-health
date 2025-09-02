@@ -89,9 +89,9 @@ const Results = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-purple-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold mb-2">Analyzing Your Symptoms...</h2>
           <p className="text-gray-600">Our AI is processing your information to provide the most accurate results</p>
         </div>
@@ -100,7 +100,7 @@ const Results = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -122,10 +122,10 @@ const Results = () => {
 
         {/* Results Summary */}
         <div className="max-w-4xl mx-auto mb-8">
-          <Card className="border-l-4 border-l-blue-500">
+          <Card className="border-l-4 border-l-purple-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-blue-600" />
+                <TrendingUp className="h-5 w-5 text-purple-600" />
                 Analysis Complete
               </CardTitle>
               <CardDescription>
@@ -139,7 +139,7 @@ const Results = () => {
         {/* Diagnosis Results */}
         <div className="max-w-4xl mx-auto space-y-6">
           {results.map((result, index) => (
-            <Card key={index} className="shadow-lg">
+            <Card key={index} className="shadow-lg border-purple-200">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -169,12 +169,12 @@ const Results = () => {
                       <h4 className="font-medium mb-2">Description</h4>
                       <p className="text-gray-700 mb-4">{result.description}</p>
                       
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="h-5 w-5 text-blue-600 mt-0.5" />
+                          <AlertTriangle className="h-5 w-5 text-purple-600 mt-0.5" />
                           <div>
-                            <h5 className="font-medium text-blue-800 mb-1">Important Note</h5>
-                            <p className="text-sm text-blue-700">
+                            <h5 className="font-medium text-purple-800 mb-1">Important Note</h5>
+                            <p className="text-sm text-purple-700">
                               This is a preliminary analysis only. Please consult a qualified healthcare professional for proper diagnosis and treatment.
                             </p>
                           </div>
@@ -215,7 +215,7 @@ const Results = () => {
                       <div className="space-y-2">
                         {result.possibleCauses.map((cause, causeIndex) => (
                           <div key={causeIndex} className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                             <span>{cause}</span>
                           </div>
                         ))}
@@ -229,7 +229,7 @@ const Results = () => {
                       <div className="space-y-3">
                         {result.recommendedActions.map((action, actionIndex) => (
                           <div key={actionIndex} className="flex items-start gap-3">
-                            <div className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                            <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
                               {actionIndex + 1}
                             </div>
                             <p className="text-gray-700">{action}</p>
@@ -238,7 +238,7 @@ const Results = () => {
                       </div>
                       
                       <div className="mt-6 space-y-3">
-                        <Button className="w-full" size="lg">
+                        <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                           <Calendar className="h-4 w-4 mr-2" />
                           Book Online Doctor Consultation
                         </Button>

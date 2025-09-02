@@ -115,9 +115,9 @@ const History = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-purple-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold mb-2">Loading Records...</h2>
         </div>
       </div>
@@ -125,7 +125,7 @@ const History = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -140,7 +140,7 @@ const History = () => {
         </div>
 
         {/* Search and Filter */}
-        <Card className="mb-8">
+        <Card className="mb-8 border-purple-200">
           <CardContent className="p-4">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -169,14 +169,14 @@ const History = () => {
 
         {/* Records Grid */}
         {filteredRecords.length === 0 ? (
-          <Card className="text-center py-12">
+          <Card className="text-center py-12 border-purple-200">
             <CardContent>
               <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Health Records Found</h3>
               <p className="text-gray-600 mb-4">
                 {searchTerm ? "No records match your search criteria." : "Complete a health assessment to see your records here."}
               </p>
-              <Button onClick={() => window.location.href = "/"}>
+              <Button onClick={() => window.location.href = "/"} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                 Start New Assessment
               </Button>
             </CardContent>
@@ -184,7 +184,7 @@ const History = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRecords.map((record) => (
-              <Card key={record.id} className="shadow-lg hover:shadow-xl transition-shadow">
+              <Card key={record.id} className="shadow-lg hover:shadow-xl transition-shadow border-purple-200">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
@@ -234,7 +234,7 @@ const History = () => {
                     {record.diagnosis && (
                       <div>
                         <h4 className="font-medium text-sm mb-1">Diagnosis</h4>
-                        <div className="bg-blue-50 rounded p-2">
+                        <div className="bg-purple-50 rounded p-2">
                           <p className="font-medium text-sm">{record.diagnosis.condition}</p>
                           <p className="text-xs text-gray-600">
                             Confidence: {record.diagnosis.confidence}%
@@ -261,13 +261,13 @@ const History = () => {
         )}
 
         {/* Data Usage Notice */}
-        <Card className="mt-8 border-blue-200 bg-blue-50">
+        <Card className="mt-8 border-purple-200 bg-purple-50">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-blue-600 mt-0.5" />
+              <AlertTriangle className="h-5 w-5 text-purple-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-blue-800 mb-1">Data Usage for AI Training</h4>
-                <p className="text-sm text-blue-700">
+                <h4 className="font-medium text-purple-800 mb-1">Data Usage for AI Training</h4>
+                <p className="text-sm text-purple-700">
                   Your health records are stored securely and will be used to improve our AI diagnostic models. 
                   All data is anonymized and aggregated for research purposes. You can export your data at any time.
                 </p>
