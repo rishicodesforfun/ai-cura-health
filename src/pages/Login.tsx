@@ -5,9 +5,8 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { User, Mail, Lock, AlertCircle, Eye, EyeOff, AlertTriangle } from "lucide-react";
+import { Mail, Lock, AlertCircle, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { generateToken, setAuthToken } from "@/lib/jwt";
 
 interface LoginData {
@@ -26,7 +25,6 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in by verifying JWT
     const token = localStorage.getItem('aicura_jwt_token');
     if (token) {
       setIsLoggedIn(true);
@@ -57,24 +55,20 @@ const Login = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
     setTimeout(() => {
       const users = JSON.parse(localStorage.getItem("aicura_users") || "[]");
       const user = users.find((u: any) => u.email === formData.email && u.password === formData.password);
       
       if (user) {
         setIsSubmitting(false);
-        // Generate JWT token
         const token = generateToken({
           id: user.id,
           email: user.email,
           name: user.name
         });
         
-        // Store JWT token
         setAuthToken(token);
         
-        // Also store current user session for convenience
         const currentUser = {
           id: user.id,
           name: user.name,
@@ -105,85 +99,97 @@ const Login = () => {
   if (isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-8 w-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
-            <p className="text-gray-600 mb-6">
-              You are already logged in. Redirecting to your dashboard...
-            </p>
-            <Button onClick={() => window.location.href = "/"} className="w-full">
-              Go to Dashboard
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="w-full max-w-md p-8 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-2xl font-bold text-green-600">✓</div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
+          <p className="text-gray-600 mb-6">
+            You are already logged in. Redirecting to your dashboard...
+          </p>
+          <Button onClick={() => window.location.href = "/"} className="w-full">
+            Go to Dashboard
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
-      {/* Animated Background */}
+      {/* Dynamic Background with Particles and Light Trails */}
       <div className="absolute inset-0 z-0">
-        {/* Neural Network Background */}
+        {/* Base dark gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
         
         {/* Animated Particles */}
         <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
+          {[...Array(80)].map((_, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDuration: `${2 + Math.random() * 3}s`,
+                animationDuration: `${2 + Math.random() * 4}s`,
                 animationDelay: `${Math.random() * 2}s`,
+                opacity: Math.random() * 0.8 + 0.2,
               }}
             />
           ))}
         </div>
 
-        {/* Neural Network Lines */}
+        {/* Light Trails */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1920 1080">
           <defs>
-            <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="neonGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#00ffff" />
               <stop offset="100%" stopColor="#00ff88" />
             </linearGradient>
+            <linearGradient id="neonGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#00ff88" />
+              <stop offset="100%" stopColor="#00ffff" />
+            </linearGradient>
           </defs>
           
-          {/* Neural network connections */}
-          {[...Array(20)].map((_, i) => (
-            <line
-              key={i}
-              x1={Math.random() * 1920}
-              y1={Math.random() * 1080}
-              x2={Math.random() * 1920}
-              y2={Math.random() * 1080}
-              stroke="url(#neonGradient)"
-              strokeWidth="0.5"
-              opacity="0.3"
-              className="animate-pulse"
-              style={{
-                animationDuration: `${3 + Math.random() * 4}s`,
-              }}
-            />
-          ))}
+          {/* Swirling light trails */}
+          {[...Array(25)].map((_, i) => {
+            const startX = Math.random() * 1920;
+            const startY = Math.random() * 1080;
+            const endX = Math.random() * 1920;
+            const endY = Math.random() * 1080;
+            const midX = (startX + endX) / 2 + (Math.random() - 0.5) * 400;
+            const midY = (startY + endY) / 2 + (Math.random() - 0.5) * 400;
+            
+            return (
+              <path
+                key={i}
+                d={`M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`}
+                stroke={i % 2 === 0 ? "url(#neonGradient1)" : "url(#neonGradient2)"}
+                strokeWidth="0.5"
+                fill="none"
+                opacity="0.3"
+                className="animate-pulse"
+                style={{
+                  animationDuration: `${3 + Math.random() * 5}s`,
+                  animationDelay: `${Math.random() * 3}s`,
+                }}
+              />
+            );
+          })}
           
           {/* Glowing nodes */}
-          {[...Array(15)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <circle
               key={i}
               cx={Math.random() * 1920}
               cy={Math.random() * 1080}
-              r="2"
+              r="1.5"
               fill="#00ffff"
               className="animate-pulse"
               style={{
                 animationDuration: `${2 + Math.random() * 3}s`,
+                animationDelay: `${Math.random() * 2}s`,
               }}
             />
           ))}
@@ -193,18 +199,18 @@ const Login = () => {
       {/* Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          {/* AICURA Logo and Title */}
+          {/* Logo and Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400 to-green-400 rounded-2xl mb-4 shadow-2xl">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400 to-green-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
               <span className="text-3xl font-bold text-black">AI</span>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2">AICURA</h1>
-            <p className="text-cyan-300 text-sm">Intelligent Preliminary Disease Identification</p>
+            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">AICURA</h1>
+            <p className="text-cyan-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
           </div>
 
-          {/* Glassmorphism Login Card */}
-          <div className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
-            <div className="text-center mb-6">
+          {/* Glassmorphism Panel */}
+          <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <div className="text-center mb-8">
               <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
               <p className="text-gray-300 text-sm">Enter your credentials to access your dashboard</p>
             </div>
@@ -231,7 +237,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -250,11 +256,11 @@ const Login = () => {
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 pr-10"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 transition-all duration-200 pr-10"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200 transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -269,7 +275,7 @@ const Login = () => {
               {/* Submit Button */}
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
+                className="w-full bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
