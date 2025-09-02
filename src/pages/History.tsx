@@ -15,7 +15,8 @@ import {
   AlertTriangle,
   Download,
   Filter,
-  Eye
+  Eye,
+  Ruler
 } from "lucide-react";
 
 interface HealthRecord {
@@ -25,6 +26,7 @@ interface HealthRecord {
   age: string;
   gender: string;
   weight: string;
+  height: string;
   symptoms: string;
   image?: File | null;
   createdAt: string;
@@ -56,7 +58,8 @@ const History = () => {
           name: user?.name || "Unknown User",
           age: user?.age || "",
           gender: user?.gender || "",
-          weight: user?.weight || ""
+          weight: user?.weight || "",
+          height: user?.height || ""
         };
       });
       setRecords(recordsWithUserInfo);
@@ -205,6 +208,12 @@ const History = () => {
                         <User className="h-4 w-4" />
                         {record.age}y, {record.gender}
                       </div>
+                      {record.height && (
+                        <div className="flex items-center gap-1">
+                          <Ruler className="h-4 w-4" />
+                          {record.height}cm
+                        </div>
+                      )}
                       {record.weight && (
                         <div className="flex items-center gap-1">
                           <Weight className="h-4 w-4" />
