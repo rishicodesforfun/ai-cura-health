@@ -81,7 +81,8 @@ const Login = () => {
           email: user.email,
           age: user.age,
           gender: user.gender,
-          weight: user.weight
+          weight: user.weight,
+          height: user.height, // Add height to user session
         };
         localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
         
