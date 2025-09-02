@@ -81,7 +81,8 @@ const Login = () => {
           email: user.email,
           age: user.age,
           gender: user.gender,
-          weight: user.weight
+          weight: user.weight,
+          height: user.height
         };
         localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
         
@@ -123,39 +124,106 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AIcura</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Intelligent Preliminary Disease Identification System
-          </p>
+    <div className="min-h-screen relative overflow-hidden bg-black">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        {/* Neural Network Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+        
+        {/* Animated Particles */}
+        <div className="absolute inset-0">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDuration: `${2 + Math.random() * 3}s`,
+                animationDelay: `${Math.random() * 2}s`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Login Form */}
-        <div className="max-w-md mx-auto">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-6 w-6 text-blue-600" />
-                Sign In
-              </CardTitle>
-              <CardDescription>
-                Enter your credentials to access your health dashboard
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+        {/* Neural Network Lines */}
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1920 1080">
+          <defs>
+            <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#00ffff" />
+              <stop offset="100%" stopColor="#00ff88" />
+            </linearGradient>
+          </defs>
+          
+          {/* Neural network connections */}
+          {[...Array(20)].map((_, i) => (
+            <line
+              key={i}
+              x1={Math.random() * 1920}
+              y1={Math.random() * 1080}
+              x2={Math.random() * 1920}
+              y2={Math.random() * 1080}
+              stroke="url(#neonGradient)"
+              strokeWidth="0.5"
+              opacity="0.3"
+              className="animate-pulse"
+              style={{
+                animationDuration: `${3 + Math.random() * 4}s`,
+              }}
+            />
+          ))}
+          
+          {/* Glowing nodes */}
+          {[...Array(15)].map((_, i) => (
+            <circle
+              key={i}
+              cx={Math.random() * 1920}
+              cy={Math.random() * 1080}
+              r="2"
+              fill="#00ffff"
+              className="animate-pulse"
+              style={{
+                animationDuration: `${2 + Math.random() * 3}s`,
+              }}
+            />
+          ))}
+        </svg>
+      </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          {/* AICURA Logo and Title */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400 to-green-400 rounded-2xl mb-4 shadow-2xl">
+              <span className="text-3xl font-bold text-black">AI</span>
+            </div>
+            <h1 className="text-4xl font-bold text-white mb-2">AICURA</h1>
+            <p className="text-cyan-300 text-sm">Intelligent Preliminary Disease Identification</p>
+          </div>
+
+          {/* Glassmorphism Login Card */}
+          <div className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
+              <p className="text-gray-300 text-sm">Enter your credentials to access your dashboard</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <Alert variant="destructive" className="bg-red-500/20 border-red-500/30">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-white">{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {/* Email Input */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-200 text-sm font-medium">Email Address</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-4 w-4 text-gray-400" />
+                  </div>
                   <Input
                     id="email"
                     type="email"
@@ -163,82 +231,87 @@ const Login = () => {
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                   />
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange("password", e.target.value)}
-                      required
-                      className="pr-10"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
+              {/* Password Input */}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-200 text-sm font-medium">Password</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-gray-400" />
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 pr-10"
+                  />
                   <button
                     type="button"
-                    className="text-sm text-blue-600 hover:text-blue-800"
-                    onClick={() => window.location.href = "/signup"}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    Don't have an account? Sign Up
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
-
-                {/* Submit Button */}
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Signing In...
-                    </div>
-                  ) : (
-                    "Sign In"
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Additional Info */}
-        <div className="max-w-md mx-auto mt-8">
-          <Card className="border-blue-200 bg-blue-50">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-blue-600" />
-                <div>
-                  <h4 className="font-medium text-blue-800 mb-1">Demo Account</h4>
-                  <p className="text-sm text-blue-700">
-                    Create an account to start using AIcura. Your health data is stored securely and helps improve our AI models.
-                  </p>
-                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
 
+              {/* Submit Button */}
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02]"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Signing In...
+                  </div>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
+
+            {/* Sign Up Link */}
+            <div className="text-center mt-6">
+              <button
+                type="button"
+                className="text-cyan-300 hover:text-cyan-200 text-sm transition-colors"
+                onClick={() => window.location.href = "/signup"}
+              >
+                Don't have an account? Sign Up
+              </button>
+            </div>
+          </div>
+
+          {/* Demo Notice */}
+          <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-4 w-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <h4 className="text-cyan-300 text-sm font-medium mb-1">Demo Account</h4>
+                <p className="text-gray-400 text-xs">
+                  Create an account to start using AICURA. Your health data helps improve our AI models.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Made with Dyad */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
         <MadeWithDyad />
       </div>
     </div>
