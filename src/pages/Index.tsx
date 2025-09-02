@@ -18,7 +18,6 @@ const Index = () => {
     age: "",
     gender: "",
     weight: "",
-    height: "", // Added height field
     symptoms: "",
     image: null as File | null,
   });
@@ -51,7 +50,6 @@ const Index = () => {
       age: formData.age || (currentUser.age || ""),
       gender: formData.gender || (currentUser.gender || ""),
       weight: formData.weight || (currentUser.weight || ""),
-      height: formData.height || (currentUser.height || ""), // Add height to health record
       symptoms: formData.symptoms,
       image: formData.image,
       createdAt: new Date().toISOString(),
@@ -147,7 +145,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="gender">Gender</Label>
                     <select
@@ -164,22 +162,11 @@ const Index = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="height">Height (cm)</Label>
-                    <Input
-                      id="height"
-                      type="number"
-                      placeholder="Height in cm"
-                      value={formData.height}
-                      onChange={(e) => handleInputChange("height", e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
                     <Label htmlFor="weight">Weight (kg)</Label>
                     <Input
                       id="weight"
                       type="number"
-                      placeholder="Weight in kg"
+                      placeholder="Enter your weight in kg"
                       value={formData.weight}
                       onChange={(e) => handleInputChange("weight", e.target.value)}
                     />

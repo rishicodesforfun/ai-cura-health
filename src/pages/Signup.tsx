@@ -18,7 +18,6 @@ interface SignupData {
   age: string;
   gender: string;
   weight: string;
-  height: string; // Added height field
 }
 
 const Signup = () => {
@@ -30,7 +29,6 @@ const Signup = () => {
     age: "",
     gender: "",
     weight: "",
-    height: "", // Initialize height field
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -68,10 +66,6 @@ const Signup = () => {
     }
     if (!formData.gender) {
       setError("Gender is required");
-      return false;
-    }
-    if (!formData.height) {
-      setError("Height is required");
       return false;
     }
     return true;
@@ -116,8 +110,7 @@ const Signup = () => {
         email: userData.email,
         age: userData.age,
         gender: userData.gender,
-        weight: userData.weight,
-        height: userData.height, // Add height to current user session
+        weight: userData.weight
       };
       localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
     }, 2000);
@@ -255,28 +248,15 @@ const Signup = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="height">Height (cm)</Label>
-                    <Input
-                      id="height"
-                      type="number"
-                      placeholder="Height in cm"
-                      value={formData.height}
-                      onChange={(e) => handleInputChange("height", e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (kg)</Label>
-                    <Input
-                      id="weight"
-                      type="number"
-                      placeholder="Weight in kg"
-                      value={formData.weight}
-                      onChange={(e) => handleInputChange("weight", e.target.value)}
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weight">Weight (kg)</Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    placeholder="Weight in kg"
+                    value={formData.weight}
+                    onChange={(e) => handleInputChange("weight", e.target.value)}
+                  />
                 </div>
 
                 {/* Submit Button */}
