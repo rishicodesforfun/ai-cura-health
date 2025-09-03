@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -89,8 +90,8 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('aicura_jwt_token');
-    localStorage.removeItem('aicura_current_user');
+    localStorage.removeItem("aicura_jwt_token");
+    localStorage.removeItem("aicura_current_user");
     setIsLoggedIn(false);
     window.location.reload();
   };
@@ -313,6 +314,11 @@ const Login = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Made with Dyad */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+        <MadeWithDyad />
       </div>
     </div>
   );
