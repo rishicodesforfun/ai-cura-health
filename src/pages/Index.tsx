@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -299,8 +298,6 @@ const Index = () => {
             </Card>
           </div>
         </div>
-
-        <MadeWithDyad />
       </div>
     </div>
   );
