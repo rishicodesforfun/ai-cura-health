@@ -322,15 +322,21 @@ const Signup = () => {
                   <Label htmlFor="gender" className="text-gray-200 text-sm font-medium">Gender</Label>
                   <select
                     id="gender"
-                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 appearance-none pr-10"
                     value={formData.gender}
                     onChange={(e) => handleInputChange("gender", e.target.value)}
                     required
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 0.5rem center',
+                      backgroundSize: '1.5em 1.5em'
+                    }}
                   >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="" className="text-gray-800">Select gender</option>
+                    <option value="male" className="text-gray-800">Male</option>
+                    <option value="female" className="text-gray-800">Female</option>
+                    <option value="other" className="text-gray-800">Other</option>
                   </select>
                 </div>
               </div>
