@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, User, Calendar, Weight, AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Upload, User, Calendar, Weight, AlertTriangle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { removeAuthToken } from "@/lib/jwt";
 
@@ -40,6 +40,17 @@ const Index = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Validate required fields
+    if (!formData.symptoms.trim()) {
+      toast({
+        title: "Symptoms Required",
+        description: "Please describe your symptoms in detail for analysis.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+    
     // Get current user
     const currentUser = JSON.parse(localStorage.getItem("aicura_current_user") || "{}");
     
@@ -62,12 +73,8 @@ const Index = () => {
     existingRecords.push(healthRecord);
     localStorage.setItem("aicura_health_records", JSON.stringify(existingRecords));
 
-    // Simulate AI processing
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Navigate to results page
-      window.location.href = "/results";
-    }, 3000);
+    // Navigate to results page
+    window.location.href = "/results";
   };
 
   const handleLogout = () => {
@@ -107,6 +114,15 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Info Alert */}
+        <Alert className="max-w-4xl mx-auto mb-8 bg-purple-50 border-purple-200">
+          <Info className="h-4 w-4 text-purple-600" />
+          <AlertDescription className="text-purple-800">
+            <strong>How it works:</strong> Describe your symptoms in detail for the most accurate analysis. 
+            Our AI model will compare your symptoms against a database of known conditions to provide preliminary insights.
+          </AlertDescription>
+        </Alert>
+
         {/* Main Form */}
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-lg border-purple-200">
@@ -131,7 +147,6 @@ const Index = () => {
                       placeholder="Enter your full name"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
-                      required
                     />
                   </div>
                   <div className="space-y-2">
@@ -142,7 +157,6 @@ const Index = () => {
                       placeholder="Enter your age"
                       value={formData.age}
                       onChange={(e) => handleInputChange("age", e.target.value)}
-                      required
                     />
                   </div>
                 </div>
@@ -155,7 +169,6 @@ const Index = () => {
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none pr-10"
                       value={formData.gender}
                       onChange={(e) => handleInputChange("gender", e.target.value)}
-                      required
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundRepeat: 'no-repeat',
@@ -177,7 +190,6 @@ const Index = () => {
                       placeholder="Height in cm"
                       value={formData.height}
                       onChange={(e) => handleInputChange("height", e.target.value)}
-                      required
                     />
                   </div>
                   <div className="space-y-2">
@@ -197,10 +209,10 @@ const Index = () => {
                   <Label htmlFor="symptoms">Symptom Description</Label>
                   <Textarea
                     id="symptoms"
-                    placeholder="Please describe your symptoms in detail. Include duration, severity, and any other relevant information..."
+                    placeholder="Please describe your symptoms in detail. Include duration, severity, and any other relevant information. Example: 'I've had a headache for 3 days, accompanied by fever and nausea...'"
                     value={formData.symptoms}
                     onChange={(e) => handleInputChange("symptoms", e.target.value)}
-                    rows={4}
+                    rows={6}
                     required
                   />
                 </div>

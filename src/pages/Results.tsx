@@ -16,6 +16,7 @@ import {
   Clock,
   TrendingUp
 } from "lucide-react";
+import DiseasePredictorComponent from "@/components/DiseasePredictor";
 
 interface DiagnosisResult {
   condition: string;
@@ -30,9 +31,24 @@ interface DiagnosisResult {
 const Results = () => {
   const [results, setResults] = useState<DiagnosisResult[]>([]);
   const [loading, setLoading] = useState(true);
+  const [useMLModel, setUseMLModel] = useState(false);
+  const [userSymptoms, setUserSymptoms] = useState("");
 
   useEffect(() => {
-    // Simulate AI processing results
+    // Get the last submitted health record
+    const storedRecords = localStorage.getItem("aicura_health_records");
+    if (storedRecords) {
+      const records = JSON.parse(storedRecords);
+      if (records.length > 0) {
+        const lastRecord = records[records.length - 1];
+        setUserSymptoms(lastRecord.symptoms);
+        // For demo purposes, we'll use the ML model
+        setUseMLModel(true);
+        return;
+      }
+    }
+    
+    // Fallback to mock data if no records found
     setTimeout(() => {
       const mockResults: DiagnosisResult[] = [
         {
@@ -86,6 +102,10 @@ const Results = () => {
       default: return "Unknown";
     }
   };
+
+  if (useMLModel && userSymptoms) {
+    return <DiseasePredictorComponent userSymptoms={userSymptoms} onBack={() => window.location.href = "/"} />;
+  }
 
   if (loading) {
     return (
