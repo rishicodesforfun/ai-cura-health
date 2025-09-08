@@ -14,8 +14,11 @@ import {
   ExternalLink,
   User,
   Clock,
-  TrendingUp
+  TrendingUp,
+  Video
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { showSuccess } from "@/utils/toast";
 import DiseasePredictorComponent from "@/components/DiseasePredictor";
 
 interface DiagnosisResult {
@@ -33,6 +36,7 @@ const Results = () => {
   const [loading, setLoading] = useState(true);
   const [useMLModel, setUseMLModel] = useState(false);
   const [userSymptoms, setUserSymptoms] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     // Get the last submitted health record
@@ -101,6 +105,13 @@ const Results = () => {
       case "high": return "High";
       default: return "Unknown";
     }
+  };
+
+  const handleVideoCall = () => {
+    showSuccess("Redirecting to video consultation...");
+    setTimeout(() => {
+      window.location.href = "/video-call";
+    }, 1000);
   };
 
   if (useMLModel && userSymptoms) {
@@ -258,7 +269,14 @@ const Results = () => {
                       </div>
                       
                       <div className="mt-6 space-y-3">
-                        <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                        <Button 
+                          onClick={handleVideoCall}
+                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                        >
+                          <Video className="h-4 w-4 mr-2" />
+                          Connect with a Doctor
+                        </Button>
+                        <Button variant="outline" className="w-full">
                           <Calendar className="h-4 w-4 mr-2" />
                           Book Online Doctor Consultation
                         </Button>

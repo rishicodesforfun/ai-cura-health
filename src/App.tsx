@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import History from "./pages/History";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import VideoCallPage from "./pages/VideoCallPage";
 import { getCurrentUser } from "./lib/jwt";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <History />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/video-call" 
+            element={
+              <ProtectedRoute>
+                <VideoCallPage />
               </ProtectedRoute>
             } 
           />
