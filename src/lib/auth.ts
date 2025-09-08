@@ -21,6 +21,17 @@ const DEFAULT_USERS = [
     weight: "60",
     height: "165",
     createdAt: new Date().toISOString()
+  },
+  {
+    id: "3",
+    name: "Test User",
+    email: "test@example.com",
+    password: "test123",
+    age: "35",
+    gender: "other",
+    weight: "65",
+    height: "170",
+    createdAt: new Date().toISOString()
   }
 ];
 
@@ -55,4 +66,12 @@ export const findUserByEmail = (email: string) => {
 export const findUserByEmailAndPassword = (email: string, password: string) => {
   const users = getUsers();
   return users.find((user: any) => user.email === email && user.password === password);
+};
+
+// Get default credentials for demo
+export const getDefaultCredentials = () => {
+  return {
+    email: "john@example.com",
+    password: "password123"
+  };
 };

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, Lock, AlertCircle, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { generateToken, setAuthToken } from "@/lib/jwt";
+import { initializeUsers, findUserByEmailAndPassword, getDefaultCredentials } from "@/lib/auth";
 
 interface LoginData {
   email: string;
@@ -25,6 +26,9 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Initialize users if not exists
+    initializeUsers();
+    
     const token = localStorage.getItem('aicura_jwt_token');
     if (token) {
       setIsLoggedIn(true);
@@ -56,8 +60,8 @@ const Login = () => {
     setIsSubmitting(true);
     
     setTimeout(() => {
-      const users = JSON.parse(localStorage.getItem("aicura_users") || "[]");
-      const user = users.find((u: any) => u.email === formData.email && u.password === formData.password);
+      // Use the auth utility to find user
+      const user = findUserByEmailAndPassword(formData.email, formData.password);
       
       if (user) {
         setIsSubmitting(false);
@@ -94,6 +98,14 @@ const Login = () => {
     localStorage.removeItem("aicura_current_user");
     setIsLoggedIn(false);
     window.location.reload();
+  };
+
+  const useDefaultCredentials = () => {
+    const defaultCreds = getDefaultCredentials();
+    setFormData({
+      email: defaultCreds.email,
+      password: defaultCreds.password
+    });
   };
 
   if (isLoggedIn) {
@@ -269,6 +281,26 @@ const Login = () => {
                       <Eye className="h-4 w-4" />
                     )}
                   </button>
+                </div>
+              </div>
+
+              {/* Demo Credentials */}
+              <div className="bg-purple-500/20 border border-purple-400/30 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-purple-200 text-sm font-medium">Demo Credentials</span>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={useDefaultCredentials}
+                    className="text-purple-300 hover:text-purple-200 text-xs"
+                  >
+                    Use Demo
+                  </Button>
+                </div>
+                <div className="text-xs text-purple-300 space-y-1">
+                  <div>Email: john@example.com</div>
+                  <div>Password: password123</div>
                 </div>
               </div>
 

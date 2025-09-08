@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { User, Mail, Lock, AlertCircle } from "lucide-react";
 import { generateToken, setAuthToken } from "@/lib/jwt";
+import { initializeUsers, addUser, getDefaultCredentials } from "@/lib/auth";
 
 interface SignupData {
   name: string;
@@ -94,9 +95,7 @@ const Signup = () => {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
-      const existingUsers = JSON.parse(localStorage.getItem("aicura_users") || "[]");
-      existingUsers.push(userData);
-      localStorage.setItem("aicura_users", JSON.stringify(existingUsers));
+      addUser(userData);
       
       // Generate JWT token for the new user
       const token = generateToken({
@@ -120,6 +119,17 @@ const Signup = () => {
       };
       localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
     }, 2000);
+  };
+
+  const useDefaultCredentials = () => {
+    const defaultCreds = getDefaultCredentials();
+    setFormData(prev => ({
+      ...prev,
+      email: defaultCreds.email,
+      password: defaultCreds.password,
+      confirmPassword: defaultCreds.password,
+      name: "Demo User"
+    }));
   };
 
   if (success) {
@@ -364,6 +374,26 @@ const Signup = () => {
                     onChange={(e) => handleInputChange("weight", e.target.value)}
                     className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
                   />
+                </div>
+              </div>
+
+              {/* Demo Credentials */}
+              <div className="bg-purple-500/20 border border-purple-400/30 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-purple-200 text-sm font-medium">Quick Demo</span>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={useDefaultCredentials}
+                    className="text-purple-300 hover:text-purple-200 text-xs"
+                  >
+                    Use Demo
+                  </Button>
+                </div>
+                <div className="text-xs text-purple-300 space-y-1">
+                  <div>Uses: john@example.com / password123</div>
+                  <div>Creates a demo account instantly</div>
                 </div>
               </div>
 
