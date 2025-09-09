@@ -312,7 +312,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions Section - Moved below How AIcura Helps You */}
         <div className="mt-16 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-8">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
