@@ -196,7 +196,11 @@ Important: Always include a disclaimer that this is not medical advice and the u
   }
 }
 
-// Create a singleton instance
-const geminiService = new GeminiService(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'demo-key');
+// Create a singleton instance with a fallback API key
+const apiKey = typeof window !== 'undefined' && (window as any).NEXT_PUBLIC_GEMINI_API_KEY 
+  ? (window as any).NEXT_PUBLIC_GEMINI_API_KEY 
+  : 'demo-key';
+
+const geminiService = new GeminiService(apiKey);
 
 export default geminiService;
