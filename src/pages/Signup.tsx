@@ -134,11 +134,11 @@ const Signup = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-8 w-8 text-purple-600" />
+            <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="h-8 w-8 text-cyan-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h2>
             <p className="text-gray-600 mb-6">
@@ -165,7 +165,7 @@ const Signup = () => {
           {[...Array(80)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -181,12 +181,12 @@ const Signup = () => {
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1920 1080">
           <defs>
             <linearGradient id="neonGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#a855f7" />
-              <stop offset="100%" stopColor="#8b5cf6" />
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#3b82f6" />
             </linearGradient>
             <linearGradient id="neonGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#a855f7" />
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#06b6d4" />
             </linearGradient>
           </defs>
           
@@ -223,7 +223,7 @@ const Signup = () => {
               cx={Math.random() * 1920}
               cy={Math.random() * 1080}
               r="1.5"
-              fill="#a855f7"
+              fill="#06b6d4"
               className="animate-pulse"
               style={{
                 animationDuration: `${2 + Math.random() * 3}s`,
@@ -239,11 +239,11 @@ const Signup = () => {
         <div className="w-full max-w-md">
           {/* Logo and Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
               <span className="text-3xl font-bold text-black">AI</span>
             </div>
             <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">AICURA</h1>
-            <p className="text-purple-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
+            <p className="text-cyan-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
           </div>
 
           {/* Glassmorphism Panel */}
@@ -271,7 +271,7 @@ const Signup = () => {
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                 />
               </div>
 
@@ -284,7 +284,7 @@ const Signup = () => {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                 />
               </div>
 
@@ -297,7 +297,7 @@ const Signup = () => {
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                 />
               </div>
 
@@ -310,7 +310,7 @@ const Signup = () => {
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                 />
               </div>
 
@@ -325,14 +325,14 @@ const Signup = () => {
                     value={formData.age}
                     onChange={(e) => handleInputChange("age", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="gender" className="text-gray-200 text-sm font-medium">Gender</Label>
                   <select
                     id="gender"
-                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 appearance-none pr-10"
+                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 appearance-none pr-10"
                     value={formData.gender}
                     onChange={(e) => handleInputChange("gender", e.target.value)}
                     required
@@ -361,7 +361,7 @@ const Signup = () => {
                     value={formData.height}
                     onChange={(e) => handleInputChange("height", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -372,26 +372,26 @@ const Signup = () => {
                     placeholder="Weight in kg"
                     value={formData.weight}
                     onChange={(e) => handleInputChange("weight", e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                   />
                 </div>
               </div>
 
               {/* Demo Credentials */}
-              <div className="bg-purple-500/20 border border-purple-400/30 rounded-lg p-3">
+              <div className="bg-cyan-500/20 border border-cyan-400/30 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-purple-200 text-sm font-medium">Quick Demo</span>
+                  <span className="text-cyan-200 text-sm font-medium">Quick Demo</span>
                   <Button 
                     type="button" 
                     variant="ghost" 
                     size="sm"
                     onClick={useDefaultCredentials}
-                    className="text-purple-300 hover:text-purple-200 text-xs"
+                    className="text-cyan-300 hover:text-cyan-200 text-xs"
                   >
                     Use Demo
                   </Button>
                 </div>
-                <div className="text-xs text-purple-300 space-y-1">
+                <div className="text-xs text-cyan-300 space-y-1">
                   <div>Uses: john@example.com / password123</div>
                   <div>Creates a demo account instantly</div>
                 </div>
@@ -400,7 +400,7 @@ const Signup = () => {
               {/* Submit Button */}
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -419,7 +419,7 @@ const Signup = () => {
           <div className="text-center mt-6">
             <button
               type="button"
-              className="text-purple-300 hover:text-purple-200 text-sm transition-colors"
+              className="text-cyan-300 hover:text-cyan-200 text-sm transition-colors"
               onClick={() => window.location.href = "/login"}
             >
               Already have an account? Sign In

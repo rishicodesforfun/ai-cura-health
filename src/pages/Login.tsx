@@ -94,8 +94,8 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("aicura_jwt_token");
-    localStorage.removeItem("aicura_current_user");
+    localStorage.removeItem('aicura_jwt_token');
+    localStorage.removeItem('aicura_current_user');
     setIsLoggedIn(false);
     window.location.reload();
   };
@@ -110,10 +110,10 @@ const Login = () => {
 
   if (isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100 flex items-center justify-center">
         <div className="w-full max-w-md p-8 text-center">
-          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <div className="text-2xl font-bold text-purple-600">✓</div>
+          <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-2xl font-bold text-cyan-600">✓</div>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
           <p className="text-gray-600 mb-6">
@@ -139,7 +139,7 @@ const Login = () => {
           {[...Array(80)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+              className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -155,12 +155,12 @@ const Login = () => {
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1920 1080">
           <defs>
             <linearGradient id="neonGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#a855f7" />
-              <stop offset="100%" stopColor="#8b5cf6" />
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#3b82f6" />
             </linearGradient>
             <linearGradient id="neonGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#a855f7" />
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#06b6d4" />
             </linearGradient>
           </defs>
           
@@ -197,7 +197,7 @@ const Login = () => {
               cx={Math.random() * 1920}
               cy={Math.random() * 1080}
               r="1.5"
-              fill="#a855f7"
+              fill="#06b6d4"
               className="animate-pulse"
               style={{
                 animationDuration: `${2 + Math.random() * 3}s`,
@@ -213,11 +213,11 @@ const Login = () => {
         <div className="w-full max-w-md">
           {/* Logo and Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-2xl mb-4 shadow-2xl animate-pulse">
               <span className="text-3xl font-bold text-black">AI</span>
             </div>
             <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">AICURA</h1>
-            <p className="text-purple-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
+            <p className="text-cyan-300 text-sm font-light">Intelligent Preliminary Disease Identification</p>
           </div>
 
           {/* Glassmorphism Panel */}
@@ -249,7 +249,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 transition-all duration-200"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -268,7 +268,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 transition-all duration-200 pr-10"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 transition-all duration-200 pr-10"
                   />
                   <button
                     type="button"
@@ -285,20 +285,20 @@ const Login = () => {
               </div>
 
               {/* Demo Credentials */}
-              <div className="bg-purple-500/20 border border-purple-400/30 rounded-lg p-3">
+              <div className="bg-cyan-500/20 border border-cyan-400/30 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-purple-200 text-sm font-medium">Demo Credentials</span>
+                  <span className="text-cyan-200 text-sm font-medium">Demo Credentials</span>
                   <Button 
                     type="button" 
                     variant="ghost" 
                     size="sm"
                     onClick={useDefaultCredentials}
-                    className="text-purple-300 hover:text-purple-200 text-xs"
+                    className="text-cyan-300 hover:text-cyan-200 text-xs"
                   >
                     Use Demo
                   </Button>
                 </div>
-                <div className="text-xs text-purple-300 space-y-1">
+                <div className="text-xs text-cyan-300 space-y-1">
                   <div>Email: john@example.com</div>
                   <div>Password: password123</div>
                 </div>
@@ -307,7 +307,7 @@ const Login = () => {
               {/* Submit Button */}
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -325,7 +325,7 @@ const Login = () => {
             <div className="text-center mt-6">
               <button
                 type="button"
-                className="text-purple-300 hover:text-purple-200 text-sm transition-colors"
+                className="text-cyan-300 hover:text-cyan-200 text-sm transition-colors"
                 onClick={() => window.location.href = "/signup"}
               >
                 Don't have an account? Sign Up
@@ -336,9 +336,9 @@ const Login = () => {
           {/* Demo Notice */}
           <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-2xl">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="h-4 w-4 text-purple-400 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="h-4 w-4 text-cyan-400 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-purple-300 text-sm font-medium mb-1">Demo Account</h4>
+                <h4 className="text-cyan-300 text-sm font-medium mb-1">Demo Account</h4>
                 <p className="text-gray-400 text-xs">
                   Create an account to start using AICURA. Your health data helps improve our AI models.
                 </p>
