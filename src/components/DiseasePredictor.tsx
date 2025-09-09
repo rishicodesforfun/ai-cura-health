@@ -116,9 +116,9 @@ const DiseasePredictorComponent = ({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-purple-50">
+      <div className="min-h-screen flex items-center justify-center bg-cyan-50">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <Loader2 className="h-12 w-12 animate-spin text-cyan-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Analyzing Your Symptoms...</h2>
           <p className="text-gray-600">Our AI is processing your information to provide the most accurate results</p>
         </div>
@@ -128,13 +128,13 @@ const DiseasePredictorComponent = ({
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-purple-50">
+      <div className="min-h-screen flex items-center justify-center bg-cyan-50">
         <Card className="max-w-md">
           <CardContent className="p-8 text-center">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Analysis Error</h2>
             <p className="text-gray-600 mb-4">{error}</p>
-            <Button onClick={onBack} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+            <Button onClick={onBack} className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
               Back to Form
             </Button>
           </CardContent>
@@ -144,7 +144,7 @@ const DiseasePredictorComponent = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-100">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -166,10 +166,10 @@ const DiseasePredictorComponent = ({
 
         {/* Summary */}
         <div className="max-w-4xl mx-auto mb-8">
-          <Card className="border-l-4 border-l-purple-500">
+          <Card className="border-l-4 border-l-cyan-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
+                <TrendingUp className="h-5 w-5 text-cyan-600" />
                 Analysis Complete
               </CardTitle>
               <CardDescription>
@@ -182,7 +182,7 @@ const DiseasePredictorComponent = ({
         {/* Diagnosis Results */}
         <div className="max-w-4xl mx-auto space-y-6">
           {results.map((result, index) => (
-            <Card key={index} className="shadow-lg border-purple-200">
+            <Card key={index} className="shadow-lg border-cyan-200">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -235,7 +235,7 @@ const DiseasePredictorComponent = ({
                     <ul className="space-y-2">
                       {result.recommendations.map((rec, recIndex) => (
                         <li key={recIndex} className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-cyan-500 rounded-full mt-2 flex-shrink-0"></div>
                           <span className="text-sm text-gray-700">{rec}</span>
                         </li>
                       ))}
@@ -243,7 +243,7 @@ const DiseasePredictorComponent = ({
                   </div>
                   
                   <div className="mt-6 space-y-3">
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                    <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
                       <Calendar className="h-4 w-4 mr-2" />
                       Book Online Doctor Consultation
                     </Button>
@@ -260,7 +260,7 @@ const DiseasePredictorComponent = ({
 
         {/* Next Steps */}
         <div className="max-w-4xl mx-auto mt-8">
-          <Card className="border-purple-200">
+          <Card className="border-cyan-200">
             <CardHeader>
               <CardTitle>Next Steps</CardTitle>
               <CardDescription>
@@ -271,7 +271,7 @@ const DiseasePredictorComponent = ({
               <ul className="space-y-3">
                 {nextSteps.map((step, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                    <div className="w-6 h-6 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
                       {index + 1}
                     </div>
                     <p className="text-gray-700">{step}</p>
