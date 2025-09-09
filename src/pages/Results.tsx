@@ -42,6 +42,11 @@ const Results = () => {
   const [userHeight, setUserHeight] = useState("");
   const { toast } = useToast();
 
+  const handleBack = () => {
+    // Navigate back to the form page
+    window.location.href = "/";
+  };
+
   useEffect(() => {
     // Get the last submitted health record
     const storedRecords = localStorage.getItem("aicura_health_records");
@@ -132,7 +137,7 @@ const Results = () => {
     return (
       <DiseasePredictorComponent 
         userSymptoms={userSymptoms}
-        onBack={() => window.location.href = "/"}
+        onBack={handleBack}
         age={userAge}
         gender={userGender}
         weight={userWeight}
@@ -161,7 +166,7 @@ const Results = () => {
           <div className="flex items-center gap-4">
             <Button 
               variant="outline" 
-              onClick={() => window.location.href = "/"}
+              onClick={handleBack}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
