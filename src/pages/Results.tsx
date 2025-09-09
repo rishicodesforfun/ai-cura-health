@@ -15,20 +15,20 @@ import {
   User,
   Clock,
   TrendingUp,
-  Video
+  Video,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { showSuccess } from "@/utils/toast";
 import DiseasePredictorComponent from "@/components/DiseasePredictor";
 
 interface DiagnosisResult {
-  condition: string;
+  name: string;
   confidence: number;
   description: string;
-  commonMedicines: string[];
-  possibleCauses: string[];
+  symptoms: string[];
+  recommendations: string[];
   severity: "low" | "medium" | "high";
-  recommendedActions: string[];
 }
 
 const Results = () => {
@@ -36,17 +36,33 @@ const Results = () => {
   const [loading, setLoading] = useState(true);
   const [useMLModel, setUseMLModel] = useState(false);
   const [userSymptoms, setUserSymptoms] = useState("");
+  const [userAge, setUserAge] = useState("");
+  const [userGender, setUserGender] = useState("");
+  const [userWeight, setUserWeight] = useState("");
+  const [userHeight, setUserHeight] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
     // Get the last submitted health record
     const storedRecords = localStorage.getItem("aicura_health_records");
+    const userData = JSON.parse(localStorage.getItem("aicura_users") || "[]");
+    
     if (storedRecords) {
       const records = JSON.parse(storedRecords);
       if (records.length > 0) {
         const lastRecord = records[records.length - 1];
         setUserSymptoms(lastRecord.symptoms);
-        // For demo purposes, we'll use the ML model
+        
+        // Get user information
+        const user = userData.find((u: any) => u.id === lastRecord.userId);
+        if (user) {
+          setUserAge(user.age || "");
+          setUserGender(user.gender || "");
+          setUserWeight(user.weight || "");
+          setUserHeight(user.height || "");
+        }
+        
+        // Use the Gemini model for better analysis
         setUseMLModel(true);
         return;
       }
@@ -56,32 +72,30 @@ const Results = () => {
     setTimeout(() => {
       const mockResults: DiagnosisResult[] = [
         {
-          condition: "Common Cold",
+          name: "Common Cold",
           confidence: 85,
           description: "The common cold is a viral infection of your nose and throat (upper respiratory tract). It's usually harmless, although it might not feel that way. Many types of viruses can cause a common cold.",
-          commonMedicines: ["Paracetamol", "Ibuprofen", "Decongestants", "Vitamin C"],
-          possibleCauses: ["Rhinovirus", "Coronavirus", "Respiratory syncytial virus"],
-          severity: "low",
-          recommendedActions: [
+          symptoms: ["runny nose", "sneezing", "sore throat", "cough"],
+          recommendations: [
             "Rest and stay hydrated",
             "Over-the-counter pain relievers",
             "Steam inhalation",
             "Consult doctor if symptoms worsen"
-          ]
+          ],
+          severity: "low"
         },
         {
-          condition: "Seasonal Allergy",
+          name: "Seasonal Allergy",
           confidence: 72,
           description: "Seasonal allergies, also known as hay fever, are reactions to allergens that are typically present only during certain times of the year, usually when outdoor molds release their spores or trees, grasses, and weeds release pollen.",
-          commonMedicines: ["Antihistamines", "Nasal corticosteroids", "Decongestants", "Eye drops"],
-          possibleCauses: ["Pollen", "Mold spores", "Dust mites"],
-          severity: "medium",
-          recommendedActions: [
+          symptoms: ["sneezing", "itchy eyes", "runny nose", "watery eyes"],
+          recommendations: [
             "Avoid allergens when possible",
             "Use air purifiers",
             "Take medications as prescribed",
             "Monitor symptoms"
-          ]
+          ],
+          severity: "medium"
         }
       ];
       setResults(mockResults);
@@ -115,14 +129,23 @@ const Results = () => {
   };
 
   if (useMLModel && userSymptoms) {
-    return <DiseasePredictorComponent userSymptoms={userSymptoms} onBack={() => window.location.href = "/"} />;
+    return (
+      <DiseasePredictorComponent 
+        userSymptoms={userSymptoms}
+        onBack={() => window.location.href = "/"}
+        age={userAge}
+        gender={userGender}
+        weight={userWeight}
+        height={userHeight}
+      />
+    );
   }
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-purple-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Analyzing Your Symptoms...</h2>
           <p className="text-gray-600">Our AI is processing your information to provide the most accurate results</p>
         </div>
@@ -174,7 +197,7 @@ const Results = () => {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-xl mb-2">{result.condition}</CardTitle>
+                    <CardTitle className="text-xl mb-2">{result.name}</CardTitle>
                     <div className="flex items-center gap-4">
                       <Badge variant="outline" className="text-sm">
                         Confidence: {result.confidence}%
@@ -190,9 +213,9 @@ const Results = () => {
                 <Tabs defaultValue="overview" className="w-full">
                   <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="medicines">Medicines</TabsTrigger>
-                    <TabsTrigger value="causes">Causes</TabsTrigger>
-                    <TabsTrigger value="actions">Next Steps</TabsTrigger>
+                    <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
+                    <TabsTrigger value="recommendations">Actions</TabsTrigger>
+                    <TabsTrigger value="next">Next Steps</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="overview" className="mt-4">
@@ -214,51 +237,29 @@ const Results = () => {
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="medicines" className="mt-4">
+                  <TabsContent value="symptoms" className="mt-4">
                     <div>
-                      <h4 className="font-medium mb-3">Commonly Recommended Medicines</h4>
+                      <h4 className="font-medium mb-3">Associated Symptoms</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {result.commonMedicines.map((medicine, medIndex) => (
-                          <Card key={medIndex} className="border border-gray-200">
+                        {result.symptoms.map((symptom, symIndex) => (
+                          <Card key={symIndex} className="border border-gray-200">
                             <CardContent className="p-3">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Pill className="h-4 w-4 text-gray-500" />
-                                  <span className="font-medium">{medicine}</span>
-                                </div>
-                                <Button size="sm" variant="outline">
-                                  <ExternalLink className="h-3 w-3" />
-                                </Button>
+                              <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                <span className="font-medium">{symptom}</span>
                               </div>
                             </CardContent>
                           </Card>
                         ))}
                       </div>
-                      <p className="text-sm text-gray-500 mt-3">
-                        Click the icon to purchase medicines from trusted pharmacies
-                      </p>
                     </div>
                   </TabsContent>
                   
-                  <TabsContent value="causes" className="mt-4">
+                  <TabsContent value="recommendations" className="mt-4">
                     <div>
-                      <h4 className="font-medium mb-3">Possible Causes</h4>
-                      <div className="space-y-2">
-                        {result.possibleCauses.map((cause, causeIndex) => (
-                          <div key={causeIndex} className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                            <span>{cause}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="actions" className="mt-4">
-                    <div>
-                      <h4 className="font-medium mb-3">Recommended Next Steps</h4>
+                      <h4 className="font-medium mb-3">Recommended Actions</h4>
                       <div className="space-y-3">
-                        {result.recommendedActions.map((action, actionIndex) => (
+                        {result.recommendations.map((action, actionIndex) => (
                           <div key={actionIndex} className="flex items-start gap-3">
                             <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
                               {actionIndex + 1}
@@ -266,6 +267,38 @@ const Results = () => {
                             <p className="text-gray-700">{action}</p>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="next" className="mt-4">
+                    <div>
+                      <h4 className="font-medium mb-3">Next Steps</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                            1
+                          </div>
+                          <p className="text-gray-700">Monitor your symptoms for changes</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                            2
+                          </div>
+                          <p className="text-gray-700">Get adequate rest and stay hydrated</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                            3
+                          </div>
+                          <p className="text-gray-700">Consult a healthcare professional for proper evaluation</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                            4
+                          </div>
+                          <p className="text-gray-700">Seek immediate medical attention if symptoms worsen</p>
+                        </div>
                       </div>
                       
                       <div className="mt-6 space-y-3">

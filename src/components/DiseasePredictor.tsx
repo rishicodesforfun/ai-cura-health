@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import diseasePredictor from "@/lib/disease-predictor";
+import geminiService from "@/lib/gemini-service";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,57 +12,71 @@ import {
   User,
   TrendingUp,
   CheckCircle,
-  Info
+  Info,
+  Loader2
 } from "lucide-react";
 
 interface PredictionResult {
-  disease: string;
+  name: string;
   confidence: number;
   description: string;
-  severity: string;
+  severity: 'low' | 'medium' | 'high';
+  symptoms: string[];
+  recommendations: string[];
 }
 
 interface DiseasePredictorProps {
   userSymptoms: string;
   onBack: () => void;
+  age?: string;
+  gender?: string;
+  weight?: string;
+  height?: string;
 }
 
-const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorProps) => {
+const DiseasePredictorComponent = ({ 
+  userSymptoms, 
+  onBack, 
+  age, 
+  gender, 
+  weight, 
+  height 
+}: DiseasePredictorProps) => {
   const [results, setResults] = useState<PredictionResult[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [summary, setSummary] = useState("");
+  const [nextSteps, setNextSteps] = useState<string[]>([]);
 
   useEffect(() => {
-    // Process user symptoms and get predictions
-    const processSymptoms = () => {
-      // Simple tokenization of symptoms
-      const symptomsArray = userSymptoms
-        .toLowerCase()
-        .split(/[,\.\n]/)
-        .flatMap(sentence => sentence.split(" "))
-        .filter(word => word.length > 2)
-        .map(word => word.replace(/[^a-zA-Z_]/g, ""));
-      
-      // Get all possible symptoms from our model
-      const allSymptoms = diseasePredictor.getAllSymptoms();
-      
-      // Match user symptoms with known symptoms
-      const matchedSymptoms = symptomsArray.filter(symptom => 
-        allSymptoms.some(knownSymptom => 
-          knownSymptom.toLowerCase().includes(symptom) || 
-          symptom.includes(knownSymptom.toLowerCase())
-        )
-      );
-      
-      // Get predictions
-      const predictions = diseasePredictor.predict(matchedSymptoms);
-      setResults(predictions);
-      setLoading(false);
+    const analyzeSymptoms = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const analysis = await geminiService.analyzeSymptoms(
+          userSymptoms,
+          age,
+          gender,
+          weight,
+          height
+        );
+        
+        setResults(analysis.conditions);
+        setSummary(analysis.summary);
+        setNextSteps(analysis.nextSteps);
+      } catch (err) {
+        console.error("Analysis error:", err);
+        setError("Unable to analyze symptoms. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     // Simulate processing time
-    const timer = setTimeout(processSymptoms, 2000);
+    const timer = setTimeout(analyzeSymptoms, 2000);
     return () => clearTimeout(timer);
-  }, [userSymptoms]);
+  }, [userSymptoms, age, gender, weight, height]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -104,10 +118,27 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
     return (
       <div className="min-h-screen flex items-center justify-center bg-purple-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-600 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Analyzing Your Symptoms...</h2>
           <p className="text-gray-600">Our AI is processing your information to provide the most accurate results</p>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-purple-50">
+        <Card className="max-w-md">
+          <CardContent className="p-8 text-center">
+            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Analysis Error</h2>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <Button onClick={onBack} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+              Back to Form
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -133,7 +164,7 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
           </div>
         </div>
 
-        {/* Results Summary */}
+        {/* Summary */}
         <div className="max-w-4xl mx-auto mb-8">
           <Card className="border-l-4 border-l-purple-500">
             <CardHeader>
@@ -142,8 +173,7 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
                 Analysis Complete
               </CardTitle>
               <CardDescription>
-                Our AI has analyzed your symptoms and identified potential conditions. 
-                Please review these results carefully and consult a healthcare professional.
+                {summary}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -158,7 +188,7 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
                   <div className="flex-1">
                     <CardTitle className="text-xl mb-2 flex items-center gap-2">
                       {getSeverityIcon(result.severity)}
-                      {result.disease}
+                      {result.name}
                     </CardTitle>
                     <div className="flex items-center gap-4">
                       <Badge variant="outline" className="text-sm">
@@ -198,6 +228,19 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
                       </div>
                     </div>
                   </div>
+
+                  {/* Recommendations */}
+                  <div>
+                    <h4 className="font-medium mb-2">Recommended Actions</h4>
+                    <ul className="space-y-2">
+                      {result.recommendations.map((rec, recIndex) => (
+                        <li key={recIndex} className="flex items-start gap-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <span className="text-sm text-gray-700">{rec}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   
                   <div className="mt-6 space-y-3">
                     <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
@@ -213,6 +256,30 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Next Steps */}
+        <div className="max-w-4xl mx-auto mt-8">
+          <Card className="border-purple-200">
+            <CardHeader>
+              <CardTitle>Next Steps</CardTitle>
+              <CardDescription>
+                Recommended actions based on your analysis
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                {nextSteps.map((step, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                      {index + 1}
+                    </div>
+                    <p className="text-gray-700">{step}</p>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Disclaimer */}
