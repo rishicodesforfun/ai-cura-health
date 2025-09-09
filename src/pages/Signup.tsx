@@ -16,10 +16,6 @@ interface SignupData {
   email: string;
   password: string;
   confirmPassword: string;
-  age: string;
-  gender: string;
-  weight: string;
-  height: string;
 }
 
 const Signup = () => {
@@ -28,10 +24,6 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    age: "",
-    gender: "",
-    weight: "",
-    height: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -61,18 +53,6 @@ const Signup = () => {
     }
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      return false;
-    }
-    if (!formData.age) {
-      setError("Age is required");
-      return false;
-    }
-    if (!formData.gender) {
-      setError("Gender is required");
-      return false;
-    }
-    if (!formData.height) {
-      setError("Height is required");
       return false;
     }
     return true;
@@ -112,10 +92,6 @@ const Signup = () => {
         id: userData.id,
         name: userData.name,
         email: userData.email,
-        age: userData.age,
-        gender: userData.gender,
-        weight: userData.weight,
-        height: userData.height,
       };
       localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
     }, 2000);
@@ -312,69 +288,6 @@ const Signup = () => {
                   required
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
                 />
-              </div>
-
-              {/* Health Information */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="age" className="text-gray-200 text-sm font-medium">Age</Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    placeholder="Age"
-                    value={formData.age}
-                    onChange={(e) => handleInputChange("age", e.target.value)}
-                    required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="gender" className="text-gray-200 text-sm font-medium">Gender</Label>
-                  <select
-                    id="gender"
-                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20 appearance-none pr-10"
-                    value={formData.gender}
-                    onChange={(e) => handleInputChange("gender", e.target.value)}
-                    required
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'right 0.5rem center',
-                      backgroundSize: '1.5em 1.5em'
-                    }}
-                  >
-                    <option value="" className="text-gray-800">Select gender</option>
-                    <option value="male" className="text-gray-800">Male</option>
-                    <option value="female" className="text-gray-800">Female</option>
-                    <option value="other" className="text-gray-800">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="height" className="text-gray-200 text-sm font-medium">Height (cm)</Label>
-                  <Input
-                    id="height"
-                    type="number"
-                    placeholder="Height in cm"
-                    value={formData.height}
-                    onChange={(e) => handleInputChange("height", e.target.value)}
-                    required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="weight" className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
-                  <Input
-                    id="weight"
-                    type="number"
-                    placeholder="Weight in kg"
-                    value={formData.weight}
-                    onChange={(e) => handleInputChange("weight", e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-cyan-400/20"
-                  />
-                </div>
               </div>
 
               {/* Demo Credentials */}

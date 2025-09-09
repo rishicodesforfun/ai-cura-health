@@ -5,10 +5,6 @@ const DEFAULT_USERS = [
     name: "John Doe",
     email: "john@example.com",
     password: "password123",
-    age: "30",
-    gender: "male",
-    weight: "70",
-    height: "175",
     createdAt: new Date().toISOString()
   },
   {
@@ -16,10 +12,6 @@ const DEFAULT_USERS = [
     name: "Jane Smith",
     email: "jane@example.com",
     password: "password123",
-    age: "25",
-    gender: "female",
-    weight: "60",
-    height: "165",
     createdAt: new Date().toISOString()
   },
   {
@@ -27,10 +19,6 @@ const DEFAULT_USERS = [
     name: "Test User",
     email: "test@example.com",
     password: "test123",
-    age: "35",
-    gender: "other",
-    weight: "65",
-    height: "170",
     createdAt: new Date().toISOString()
   }
 ];

@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, User, Calendar, Weight, AlertTriangle, Info, Video } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { removeAuthToken } from "@/lib/jwt";
+import HealthInfoModal from "@/components/HealthInfoModal";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,8 @@ const Index = () => {
     image: null as File | null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showHealthModal, setShowHealthModal] = useState(false);
+  const [forSelf, setForSelf] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (field: string, value: string) => {
@@ -34,6 +37,10 @@ const Index = () => {
     if (file) {
       setFormData(prev => ({ ...prev, image: file }));
     }
+  };
+
+  const handleHealthInfoSubmit = (isForSelf: boolean) => {
+    setForSelf(isForSelf);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,12 +64,12 @@ const Index = () => {
     // Create health record
     const healthRecord = {
       id: Date.now().toString(),
-      userId: currentUser.id || "guest",
+      userId: forSelf ? (currentUser.id || "guest") : "anonymous",
       name: formData.name || (currentUser.name || "Guest User"),
-      age: formData.age || (currentUser.age || ""),
-      gender: formData.gender || (currentUser.gender || ""),
-      weight: formData.weight || (currentUser.weight || ""),
-      height: formData.height || (currentUser.height || ""),
+      age: formData.age || "",
+      gender: formData.gender || "",
+      weight: formData.weight || "",
+      height: formData.height || "",
       symptoms: formData.symptoms,
       image: formData.image,
       createdAt: new Date().toISOString(),
@@ -360,6 +367,13 @@ const Index = () => {
 
         <MadeWithDyad />
       </div>
+
+      {/* Health Info Modal */}
+      <HealthInfoModal
+        isOpen={showHealthModal}
+        onClose={() => setShowHealthModal(false)}
+        onSubmit={handleHealthInfoSubmit}
+      />
     </div>
   );
 };
