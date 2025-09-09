@@ -15,7 +15,9 @@ import {
   CameraOff,
   User,
   Clock,
-  AlertCircle
+  AlertCircle,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 
 interface VideoCallProps {
@@ -30,6 +32,8 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState("connecting");
+  const [callQuality, setCallQuality] = useState("good");
+  const [isRecording, setIsRecording] = useState(false);
   
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -79,6 +83,10 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
     // In a real app, you would actually turn off the video track here
   };
 
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+  };
+
   const endCall = () => {
     setIsCallActive(false);
     if (timerRef.current) {
@@ -102,8 +110,17 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
     }
   };
 
+  const getConnectionStatusIcon = () => {
+    switch (connectionStatus) {
+      case "connected": return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "connecting": return <Clock className="h-4 w-4 text-yellow-600 animate-spin" />;
+      case "error": return <XCircle className="h-4 w-4 text-red-600" />;
+      default: return <AlertCircle className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -113,6 +130,7 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
           </div>
           <div className="flex items-center gap-2">
             <Badge className={getConnectionStatusColor()}>
+              {getConnectionStatusIcon()}
               {connectionStatus === "connecting" ? "Connecting..." : 
                connectionStatus === "connected" ? "Connected" : 
                connectionStatus === "error" ? "Connection Error" : "Unknown"}
@@ -219,6 +237,16 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
                 <span className="font-medium">{formatTime(callDuration)}</span>
               </div>
 
+              {/* Call Quality */}
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  callQuality === "excellent" ? "bg-green-500" :
+                  callQuality === "good" ? "bg-yellow-500" :
+                  "bg-red-500"
+                }`}></div>
+                <span className="text-sm text-gray-600">Quality: {callQuality}</span>
+              </div>
+
               {/* Control Buttons */}
               <div className="flex items-center gap-4">
                 <Button 
@@ -239,6 +267,16 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
                 >
                   {isVideoMuted ? <CameraOff className="h-4 w-4" /> : <Camera className="h-4 w-4" />}
                   {isVideoMuted ? "Video On" : "Video Off"}
+                </Button>
+
+                <Button 
+                  variant={isRecording ? "destructive" : "outline"}
+                  size="sm"
+                  onClick={toggleRecording}
+                  className="flex items-center gap-2"
+                >
+                  {isRecording ? <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" /> : <div className="w-2 h-2 bg-gray-400 rounded-full" />}
+                  {isRecording ? "Stop Recording" : "Record"}
                 </Button>
                 
                 <Button 
@@ -270,6 +308,33 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
                 discuss potential treatment options, and provide personalized recommendations 
                 based on your health history and current condition.
               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Call Summary */}
+        <Card className="mt-6 border-purple-200">
+          <CardHeader>
+            <CardTitle>Call Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{formatTime(callDuration)}</div>
+                <div className="text-sm text-gray-600">Duration</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">
+                  {isRecording ? "Active" : "Not Active"}
+                </div>
+                <div className="text-sm text-gray-600">Recording</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">
+                  {connectionStatus === "connected" ? "Good" : "Poor"}
+                </div>
+                <div className="text-sm text-gray-600">Connection</div>
+              </div>
             </div>
           </CardContent>
         </Card>

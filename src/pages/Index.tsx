@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, User, Calendar, Weight, AlertTriangle, Info } from "lucide-react";
+import { Upload, User, Calendar, Weight, AlertTriangle, Info, Video } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { removeAuthToken } from "@/lib/jwt";
 
@@ -301,12 +301,58 @@ const Index = () => {
             </Card>
             <Card className="border-purple-200">
               <CardHeader>
-                <CardTitle className="text-lg">Data-Driven Improvements</CardTitle>
+                <CardTitle className="text-lg">Video Consultations</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Your data helps train better AI models for more accurate diagnoses
+                  Connect with doctors via video call for expert advice
                 </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-8">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Video className="h-5 w-5 text-purple-600" />
+                  Video Consultation
+                </CardTitle>
+                <CardDescription>
+                  Connect with a doctor for live video consultation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={() => window.location.href = "/video-call"}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                >
+                  Start Video Call
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-purple-600" />
+                  Health History
+                </CardTitle>
+                <CardDescription>
+                  View your past health records and symptom history
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={() => window.location.href = "/history"}
+                  variant="outline"
+                  className="w-full"
+                >
+                  View History
+                </Button>
               </CardContent>
             </Card>
           </div>
