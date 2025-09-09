@@ -21,7 +21,7 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
   },
   "Allergy": {
     description: "An allergic reaction occurs when the immune system overreacts to a harmless substance.",
-    severity: "medium"
+    severity: "low"
   },
   "GERD": {
     description: "Gastroesophageal reflux disease (GERD) is a digestive disorder that affects the lower esophageal sphincter.",
@@ -61,11 +61,11 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
   },
   "Migraine": {
     description: "A neurological condition characterized by intense, throbbing headaches often accompanied by other symptoms.",
-    severity: "medium"
+    severity: "low"
   },
   "Cervical spondylosis": {
     description: "A degenerative condition affecting the discs and joints in the neck.",
-    severity: "medium"
+    severity: "low"
   },
   "Paralysis (brain hemorrhage)": {
     description: "Loss of muscle function due to bleeding in the brain, often causing stroke-like symptoms.",
@@ -81,7 +81,7 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
   },
   "Chicken pox": {
     description: "A highly contagious viral infection causing an itchy, blister-like rash all over the body.",
-    severity: "medium"
+    severity: "low"
   },
   "Dengue": {
     description: "A mosquito-borne tropical disease causing severe flu-like symptoms and potentially life-threatening complications.",
@@ -129,7 +129,7 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
   },
   "Dimorphic hemorrhoids (piles)": {
     description: "Swollen and inflamed veins in the rectum and anus causing pain and bleeding.",
-    severity: "medium"
+    severity: "low"
   },
   "Heart attack": {
     description: "Occurs when blood flow to part of the heart is blocked, causing damage to the heart muscle.",
@@ -153,7 +153,7 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
   },
   "Osteoarthritis": {
     description: "A degenerative joint disease that occurs when cartilage in joints breaks down over time.",
-    severity: "medium"
+    severity: "low"
   },
   "Arthritis": {
     description: "Inflammation of one or more joints, causing pain and stiffness.",
@@ -339,7 +339,18 @@ class DiseasePredictor {
         }
       });
       
-      const score = matchCount / disease.symptoms.length;
+      let score = matchCount / disease.symptoms.length;
+      
+      // Adjust confidence based on severity and commonality
+      if (disease.severity === 'low') {
+        // Reduce confidence for low severity conditions
+        score = score * 0.7;
+      } else if (disease.severity === 'medium') {
+        // Slightly reduce confidence for medium severity conditions
+        score = score * 0.85;
+      }
+      // High severity conditions keep their original confidence
+      
       if (score > 0) {
         scores.push({
           disease: disease.name,

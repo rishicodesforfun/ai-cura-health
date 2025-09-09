@@ -10,7 +10,9 @@ import {
   AlertTriangle, 
   Calendar,
   User,
-  TrendingUp
+  TrendingUp,
+  CheckCircle,
+  Info
 } from "lucide-react";
 
 interface PredictionResult {
@@ -80,6 +82,24 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
     }
   };
 
+  const getSeverityIcon = (severity: string) => {
+    switch (severity) {
+      case "low": return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "medium": return <Info className="h-4 w-4 text-yellow-600" />;
+      case "high": return <AlertTriangle className="h-4 w-4 text-red-600" />;
+      default: return <Info className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
+  const getReassuringMessage = (severity: string) => {
+    switch (severity) {
+      case "low": return "This condition is typically mild and often resolves on its own.";
+      case "medium": return "This condition may require some attention but is usually manageable.";
+      case "high": return "This condition requires medical attention. Please consult a doctor soon.";
+      default: return "Please consult a healthcare professional for proper evaluation.";
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-purple-50">
@@ -136,7 +156,10 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-xl mb-2">{result.disease}</CardTitle>
+                    <CardTitle className="text-xl mb-2 flex items-center gap-2">
+                      {getSeverityIcon(result.severity)}
+                      {result.disease}
+                    </CardTitle>
                     <div className="flex items-center gap-4">
                       <Badge variant="outline" className="text-sm">
                         Confidence: {result.confidence}%
@@ -155,13 +178,22 @@ const DiseasePredictorComponent = ({ userSymptoms, onBack }: DiseasePredictorPro
                     <p className="text-gray-700 mb-4">{result.description}</p>
                   </div>
                   
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  {/* Reassuring message based on severity */}
+                  <div className={`rounded-lg p-4 ${
+                    result.severity === 'low' ? 'bg-green-50 border border-green-200' :
+                    result.severity === 'medium' ? 'bg-yellow-50 border border-yellow-200' :
+                    'bg-red-50 border border-red-200'
+                  }`}>
                     <div className="flex items-start gap-2">
-                      <AlertTriangle className="h-5 w-5 text-purple-600 mt-0.5" />
+                      {getSeverityIcon(result.severity)}
                       <div>
-                        <h5 className="font-medium text-purple-800 mb-1">Important Note</h5>
-                        <p className="text-sm text-purple-700">
-                          This is a preliminary analysis only. Please consult a qualified healthcare professional for proper diagnosis and treatment.
+                        <h5 className="font-medium mb-1">
+                          {result.severity === 'low' ? 'Mild Condition' :
+                           result.severity === 'medium' ? 'Moderate Condition' :
+                           'Serious Condition'}
+                        </h5>
+                        <p className="text-sm">
+                          {getReassuringMessage(result.severity)}
                         </p>
                       </div>
                     </div>
