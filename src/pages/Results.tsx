@@ -47,6 +47,11 @@ const Results = () => {
     window.location.href = "/";
   };
 
+  const handleBookConsultation = () => {
+    // Navigate to video call page
+    window.location.href = "/video-call";
+  };
+
   useEffect(() => {
     // Get the last submitted health record
     const storedRecords = localStorage.getItem("aicura_health_records");
@@ -124,13 +129,6 @@ const Results = () => {
       case "high": return "High";
       default: return "Unknown";
     }
-  };
-
-  const handleVideoCall = () => {
-    showSuccess("Redirecting to video consultation...");
-    setTimeout(() => {
-      window.location.href = "/video-call";
-    }, 1000);
   };
 
   if (useMLModel && userSymptoms) {
@@ -308,15 +306,15 @@ const Results = () => {
                       
                       <div className="mt-6 space-y-3">
                         <Button 
-                          onClick={handleVideoCall}
+                          onClick={handleBookConsultation}
                           className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
                         >
                           <Video className="h-4 w-4 mr-2" />
-                          Connect with a Doctor
+                          Book Online Doctor Consultation
                         </Button>
                         <Button variant="outline" className="w-full">
                           <Calendar className="h-4 w-4 mr-2" />
-                          Book Online Doctor Consultation
+                          Schedule Appointment
                         </Button>
                         <Button variant="outline" className="w-full">
                           <User className="h-4 w-4 mr-2" />

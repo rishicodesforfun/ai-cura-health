@@ -13,7 +13,8 @@ import {
   TrendingUp,
   CheckCircle,
   Info,
-  Loader2
+  Loader2,
+  Video
 } from "lucide-react";
 
 interface PredictionResult {
@@ -47,6 +48,11 @@ const DiseasePredictorComponent = ({
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState("");
   const [nextSteps, setNextSteps] = useState<string[]>([]);
+
+  const handleBookConsultation = () => {
+    // Navigate to video call page
+    window.location.href = "/video-call";
+  };
 
   useEffect(() => {
     const analyzeSymptoms = async () => {
@@ -243,9 +249,16 @@ const DiseasePredictorComponent = ({
                   </div>
                   
                   <div className="mt-6 space-y-3">
-                    <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
-                      <Calendar className="h-4 w-4 mr-2" />
+                    <Button 
+                      onClick={handleBookConsultation}
+                      className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+                    >
+                      <Video className="h-4 w-4 mr-2" />
                       Book Online Doctor Consultation
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Schedule Appointment
                     </Button>
                     <Button variant="outline" className="w-full">
                       <User className="h-4 w-4 mr-2" />
