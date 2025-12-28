@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize users if not exists
@@ -85,7 +86,7 @@ const Login = () => {
         localStorage.setItem("aicura_current_user", JSON.stringify(currentUser));
         
         setIsLoggedIn(true);
-        window.location.href = "/";
+        navigate("/");
       } else {
         setIsSubmitting(false);
         setError("Invalid email or password");
@@ -97,7 +98,7 @@ const Login = () => {
     localStorage.removeItem('aicura_jwt_token');
     localStorage.removeItem('aicura_current_user');
     setIsLoggedIn(false);
-    window.location.reload();
+    navigate(0);
   };
 
   const useDefaultCredentials = () => {
@@ -326,7 +327,7 @@ const Login = () => {
               <button
                 type="button"
                 className="text-cyan-300 hover:text-cyan-200 text-sm transition-colors"
-                onClick={() => window.location.href = "/signup"}
+                onClick={() => navigate("/signup")}
               >
                 Don't have an account? Sign Up
               </button>

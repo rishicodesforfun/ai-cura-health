@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -120,7 +120,7 @@ const Signup = () => {
             <p className="text-gray-600 mb-6">
               Your AIcura account has been successfully created. You're now logged in and will be redirected to your dashboard.
             </p>
-            <Button onClick={() => window.location.href = "/"} className="w-full">
+            <Button onClick={() => navigate("/")} className="w-full">
               Go to Dashboard
             </Button>
           </CardContent>
@@ -339,11 +339,6 @@ const Signup = () => {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Made with Dyad */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
-        <MadeWithDyad />
       </div>
     </div>
   );

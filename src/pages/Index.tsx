@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,7 @@ const Index = () => {
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [forSelf, setForSelf] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -35,28 +36,22 @@ const Index = () => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setFormData(prev => ({ ...prev, image: file }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, image: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleHealthInfoSubmit = (isForSelf: boolean) => {
     setForSelf(isForSelf);
+    setShowHealthModal(false);
+    processSubmission(isForSelf);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const processSubmission = (isForSelf: boolean) => {
     setIsSubmitting(true);
-    
-    // Validate required fields
-    if (!formData.symptoms.trim()) {
-      toast({
-        title: "Symptoms Required",
-        description: "Please describe your symptoms in detail for analysis.",
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
-      return;
-    }
     
     // Get current user
     const currentUser = JSON.parse(localStorage.getItem("aicura_current_user") || "{}");
@@ -64,7 +59,7 @@ const Index = () => {
     // Create health record
     const healthRecord = {
       id: Date.now().toString(),
-      userId: forSelf ? (currentUser.id || "guest") : "anonymous",
+      userId: isForSelf ? (currentUser.id || "guest") : "anonymous",
       name: formData.name || (currentUser.name || "Guest User"),
       age: formData.age || "",
       gender: formData.gender || "",
@@ -81,13 +76,29 @@ const Index = () => {
     localStorage.setItem("aicura_health_records", JSON.stringify(existingRecords));
 
     // Navigate to results page
-    window.location.href = "/results";
+    navigate("/results");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.symptoms.trim()) {
+      toast({
+        title: "Symptoms Required",
+        description: "Please describe your symptoms in detail for analysis.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowHealthModal(true);
   };
 
   const handleLogout = () => {
     removeAuthToken();
     localStorage.removeItem("aicura_current_user");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -104,7 +115,7 @@ const Index = () => {
           <div className="flex gap-2">
             <Button 
               variant="outline" 
-              onClick={() => window.location.href = "/history"}
+              onClick={() => navigate("/history")}
               className="flex items-center gap-2"
             >
               <Calendar className="h-4 w-4" />
@@ -239,7 +250,7 @@ const Index = () => {
                     </div>
                     {formData.image && (
                       <div className="text-sm text-cyan-600">
-                        ✓ {formData.image.name}
+                        ✓ Image Uploaded
                       </div>
                     )}
                   </div>
@@ -364,8 +375,6 @@ const Index = () => {
             </Card>
           </div>
         </div>
-
-        <MadeWithDyad />
       </div>
 
       {/* Health Info Modal */}

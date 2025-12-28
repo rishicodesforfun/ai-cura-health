@@ -190,8 +190,6 @@ const VideoCallPage = () => {
             </CardContent>
           </Card>
         </div>
-
-        <MadeWithDyad />
       </div>
     </div>
   );

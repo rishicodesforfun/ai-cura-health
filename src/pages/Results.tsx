@@ -346,8 +346,6 @@ const Results = () => {
             </CardContent>
           </Card>
         </div>
-
-        <MadeWithDyad />
       </div>
     </div>
   );
