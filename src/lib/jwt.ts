@@ -1,11 +1,8 @@
-interface JWTPayload {
-  id: string;
-  email: string;
-  name: string;
-  exp: number; // expiration time (in seconds)
-}
+import { JWTPayload } from "./types";
 
 // Secret key for JWT (in a real app, this should be on the server)
+// WARNING: This client-side JWT implementation is for demonstration purposes only.
+// In a production application, JWTs should be signed and verified on a secure server.
 const SECRET_KEY = 'aicura-jwt-secret-key';
 
 // Generate a JWT token

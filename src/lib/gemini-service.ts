@@ -1,25 +1,25 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-interface SymptomAnalysis {
-  conditions: Array<{
-    name: string;
-    confidence: number;
-    description: string;
-    severity: 'low' | 'medium' | 'high';
-    symptoms: string[];
-    recommendations: string[];
-  }>;
-  summary: string;
-  nextSteps: string[];
-}
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { Condition, SymptomAnalysis } from "./types";
+import diseasePredictor from "./disease-predictor";
 
 class GeminiService {
-  private genAI: GoogleGenerativeAI;
-  private model: any;
+  private genAI: GoogleGenerativeAI | null = null;
+  private model: GenerativeModel | null = null;
+  private apiKey: string;
 
   constructor(apiKey: string) {
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    this.apiKey = apiKey;
+  }
+
+  private init() {
+    if (!this.genAI) {
+      try {
+        this.genAI = new GoogleGenerativeAI(this.apiKey);
+        this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+      } catch (error) {
+        console.error("Failed to initialize Gemini AI:", error);
+      }
+    }
   }
 
   async analyzeSymptoms(
@@ -30,6 +30,13 @@ class GeminiService {
     height?: string
   ): Promise<SymptomAnalysis> {
     try {
+      this.init();
+      
+      if (!this.model) {
+        console.warn("Gemini model not initialized, falling back to rule-based analysis");
+        return this.getFallbackAnalysis(symptoms);
+      }
+
       // Create a comprehensive prompt for Gemini
       const prompt = `
 You are an AI medical assistant providing preliminary health analysis. Based on the provided information, analyze the symptoms and provide potential conditions with confidence levels.
@@ -90,6 +97,7 @@ Important: Always include a disclaimer that this is not medical advice and the u
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private validateAndCleanAnalysis(analysis: any): SymptomAnalysis {
     // Ensure the response has the expected structure
     const defaultAnalysis: SymptomAnalysis = {
@@ -101,6 +109,7 @@ Important: Always include a disclaimer that this is not medical advice and the u
     try {
       // Validate and clean conditions
       if (Array.isArray(analysis.conditions)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         analysis.conditions = analysis.conditions.map((condition: any) => ({
           name: condition.name || "Unknown Condition",
           confidence: Math.min(95, Math.max(60, condition.confidence || 50)),
@@ -128,19 +137,47 @@ Important: Always include a disclaimer that this is not medical advice and the u
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private validateSeverity(severity: any): 'low' | 'medium' | 'high' {
     const validSeverities = ['low', 'medium', 'high'];
     return validSeverities.includes(severity) ? severity : 'medium';
   }
 
   private getFallbackAnalysis(symptoms: string): SymptomAnalysis {
-    // Basic fallback analysis based on common symptoms
+    // Use the rule-based disease predictor for fallback analysis
+    const symptomList = symptoms.split(/[,\s]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+    const predictions = diseasePredictor.predict(symptomList);
+    
+    if (predictions.length > 0) {
+      const conditions: Condition[] = predictions.map(p => ({
+        name: p.disease,
+        confidence: p.confidence,
+        description: p.description,
+        severity: p.severity as 'low' | 'medium' | 'high',
+        symptoms: p.symptoms,
+        recommendations: ["Consult a doctor for further evaluation"]
+      }));
+
+      return {
+        conditions,
+        summary: "Preliminary analysis based on your symptoms using our rule-based engine. This is not a medical diagnosis.",
+        nextSteps: [
+          "Monitor your symptoms for changes",
+          "Get adequate rest and stay hydrated",
+          "Consult a healthcare professional for proper evaluation",
+          "Seek immediate medical attention if symptoms worsen"
+        ]
+      };
+    }
+
+    // Basic fallback analysis if rule-based predictor fails
     const lowerSymptoms = symptoms.toLowerCase();
     
-    let conditions = [];
+    // eslint-disable-next-line prefer-const
+    let fallbackConditions: SymptomAnalysis['conditions'] = [];
     
     if (lowerSymptoms.includes('headache') || lowerSymptoms.includes('head')) {
-      conditions.push({
+      fallbackConditions.push({
         name: "Tension Headache",
         confidence: 75,
         description: "A common type of headache that causes mild to moderate pain and pressure around the forehead, back of the eyes and neck.",
@@ -151,7 +188,7 @@ Important: Always include a disclaimer that this is not medical advice and the u
     }
     
     if (lowerSymptoms.includes('fever') || lowerSymptoms.includes('temperature')) {
-      conditions.push({
+      fallbackConditions.push({
         name: "Viral Infection",
         confidence: 70,
         description: "A common viral infection that can cause fever, fatigue, and other symptoms.",
@@ -162,7 +199,7 @@ Important: Always include a disclaimer that this is not medical advice and the u
     }
     
     if (lowerSymptoms.includes('cough') || lowerSymptoms.includes('throat')) {
-      conditions.push({
+      fallbackConditions.push({
         name: "Upper Respiratory Infection",
         confidence: 65,
         description: "An infection of the nose, sinuses, throat, or large airways.",
@@ -172,8 +209,8 @@ Important: Always include a disclaimer that this is not medical advice and the u
       });
     }
     
-    if (conditions.length === 0) {
-      conditions.push({
+    if (fallbackConditions.length === 0) {
+      fallbackConditions.push({
         name: "General Discomfort",
         confidence: 60,
         description: "General symptoms that may indicate various mild conditions.",
@@ -184,7 +221,7 @@ Important: Always include a disclaimer that this is not medical advice and the u
     }
 
     return {
-      conditions,
+      conditions: fallbackConditions,
       summary: "Preliminary analysis based on your symptoms. This is not a medical diagnosis.",
       nextSteps: [
         "Monitor your symptoms for changes",
@@ -197,9 +234,8 @@ Important: Always include a disclaimer that this is not medical advice and the u
 }
 
 // Create a singleton instance with a fallback API key
-const apiKey = typeof window !== 'undefined' && (window as any).NEXT_PUBLIC_GEMINI_API_KEY 
-  ? (window as any).NEXT_PUBLIC_GEMINI_API_KEY 
-  : 'demo-key';
+// Use import.meta.env for Vite environment variables, fallback to 'demo-key' if not set
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || 'demo-key';
 
 const geminiService = new GeminiService(apiKey);
 

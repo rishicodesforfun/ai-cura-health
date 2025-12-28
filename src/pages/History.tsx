@@ -11,8 +11,6 @@ import {
   Search, 
   Calendar, 
   User, 
-  Weight, 
-  AlertTriangle,
   Download,
   Filter,
   Eye,
@@ -38,6 +36,7 @@ interface HealthRecord {
 }
 
 const History = () => {
+  const navigate = useNavigate();
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [filteredRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,6 +51,7 @@ const History = () => {
       const parsedRecords: HealthRecord[] = JSON.parse(storedRecords);
       // Add user information to records
       const recordsWithUserInfo = parsedRecords.map(record => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const user = userData.find((u: any) => u.id === record.userId);
         return {
           ...record,
@@ -176,7 +176,7 @@ const History = () => {
               <p className="text-gray-600 mb-4">
                 {searchTerm ? "No records match your search criteria." : "Complete a health assessment to see your records here."}
               </p>
-              <Button onClick={() => window.location.href = "/"} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+              <Button onClick={() => navigate("/")} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                 Start New Assessment
               </Button>
             </CardContent>
@@ -275,8 +275,6 @@ const History = () => {
             </div>
           </CardContent>
         </Card>
-
-        <MadeWithDyad />
       </div>
     </div>
   );

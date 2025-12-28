@@ -1,14 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, User, Clock, Phone, Video } from "lucide-react";
 import VideoCall from "@/components/VideoCall";
 
+interface Doctor {
+  name: string;
+  specialty: string;
+  rating: number;
+  experience: string;
+  available: boolean;
+}
+
 const VideoCallPage = () => {
+  const navigate = useNavigate();
   const [isCallActive, setIsCallActive] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<{
     name: string;
@@ -41,7 +50,7 @@ const VideoCallPage = () => {
     }
   ];
 
-  const startCall = (doctor: any) => {
+  const startCall = (doctor: Doctor) => {
     setSelectedDoctor(doctor);
     setIsCallActive(true);
   };
@@ -69,7 +78,7 @@ const VideoCallPage = () => {
           <div className="flex items-center gap-4">
             <Button 
               variant="outline" 
-              onClick={() => window.location.href = "/"}
+              onClick={() => navigate("/")}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />

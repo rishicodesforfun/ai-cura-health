@@ -19,6 +19,101 @@ interface HealthInfoModalProps {
   onSubmit: (forSelf: boolean) => void;
 }
 
+interface OptionConfig {
+  title: string;
+  description: string;
+  icon: typeof User;
+  iconClass: string;
+  badge: React.ReactNode;
+  checkColor: string;
+  features: string[];
+  cardBorder: string;
+  cardBg: string;
+  cardHover: string;
+}
+
+const OPTIONS_CONFIG: Record<"self" | "other", OptionConfig> = {
+  self: {
+    title: "For Myself",
+    description: "This health information will be saved to your personal health history and used to track your health over time.",
+    icon: User,
+    iconClass: "text-cyan-600",
+    badge: <Badge className="bg-green-100 text-green-800">Personal History</Badge>,
+    checkColor: "text-green-600",
+    features: [
+      "Saved to your personal health history",
+      "Track health trends over time",
+      "Personalized health insights"
+    ],
+    cardBorder: "border-cyan-500",
+    cardBg: "bg-cyan-50",
+    cardHover: "hover:border-cyan-300 hover:bg-cyan-50"
+  },
+  other: {
+    title: "For Someone Else",
+    description: "This health information will be used for analysis only and won't be saved to any personal profile.",
+    icon: Users,
+    iconClass: "text-blue-600",
+    badge: <Badge variant="outline">One-time Analysis</Badge>,
+    checkColor: "text-blue-600",
+    features: [
+      "One-time analysis only",
+      "No personal data storage",
+      "Anonymous processing"
+    ],
+    cardBorder: "border-blue-500",
+    cardBg: "bg-blue-50",
+    cardHover: "hover:border-blue-300 hover:bg-blue-50"
+  }
+};
+
+interface OptionCardProps {
+  config: OptionConfig;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const OptionCard = ({ config, isSelected, onClick }: OptionCardProps) => {
+  const Icon = config.icon;
+  
+  return (
+    <div 
+      onClick={onClick}
+      className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all duration-200 ${
+        isSelected 
+          ? `${config.cardBorder} ${config.cardBg} shadow-md` 
+          : `border-transparent bg-gray-50 hover:bg-gray-100`
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        <div className={`p-2 rounded-full bg-white shadow-sm ${config.iconClass}`}>
+          <Icon className="h-6 w-6" />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-semibold text-gray-900">{config.title}</h3>
+            {config.badge}
+          </div>
+          <p className="text-sm text-gray-600 mb-3">{config.description}</p>
+          <ul className="space-y-1">
+            {config.features.map((feature, idx) => (
+              <li key={idx} className="flex items-center text-xs text-gray-500">
+                <CheckCircle className={`h-3 w-3 mr-2 ${config.checkColor}`} />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {isSelected && (
+          <div className="absolute top-4 right-4">
+            <div className={`h-4 w-4 rounded-full ${config.checkColor.replace('text-', 'bg-')}`} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const HealthInfoModal = ({ isOpen, onClose, onSubmit }: HealthInfoModalProps) => {
   const [selectedOption, setSelectedOption] = useState<"self" | "other" | null>(null);
 
@@ -29,36 +124,14 @@ const HealthInfoModal = ({ isOpen, onClose, onSubmit }: HealthInfoModalProps) =>
     }
   };
 
-  const getOptionIcon = (option: "self" | "other") => {
-    if (option === "self") {
-      return <User className="h-6 w-6 text-cyan-600" />;
-    } else {
-      return <Users className="h-6 w-6 text-blue-600" />;
-    }
-  };
-
-  const getOptionTitle = (option: "self" | "other") => {
-    if (option === "self") {
-      return "For Myself";
-    } else {
-      return "For Someone Else";
-    }
-  };
-
-  const getOptionDescription = (option: "self" | "other") => {
-    if (option === "self") {
-      return "This health information will be saved to your personal health history and used to track your health over time.";
-    } else {
-      return "This health information will be used for analysis only and won't be saved to any personal profile.";
-    }
-  };
-
-  const getOptionBadge = (option: "self" | "other") => {
-    if (option === "self") {
-      return <Badge className="bg-green-100 text-green-800">Personal History</Badge>;
-    } else {
-      return <Badge variant="outline">One-time Analysis</Badge>;
-    }
+  const renderOption = (type: "self" | "other") => {
+    return (
+      <OptionCard
+        config={OPTIONS_CONFIG[type]}
+        isSelected={selectedOption === type}
+        onClick={() => setSelectedOption(type)}
+      />
+    );
   };
 
   return (
@@ -80,83 +153,8 @@ const HealthInfoModal = ({ isOpen, onClose, onSubmit }: HealthInfoModalProps) =>
           </div>
 
           <div className="space-y-3">
-            {/* For Myself Option */}
-            <Card 
-              className={`cursor-pointer transition-all duration-200 ${
-                selectedOption === "self" 
-                  ? "border-cyan-500 bg-cyan-50 shadow-md" 
-                  : "border-gray-200 hover:border-cyan-300 hover:bg-cyan-50"
-              }`}
-              onClick={() => setSelectedOption("self")}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    {getOptionIcon("self")}
-                    <div>
-                      <CardTitle className="text-lg">{getOptionTitle("self")}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {getOptionDescription("self")}
-                      </CardDescription>
-                    </div>
-                  </div>
-                  {getOptionBadge("self")}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span>Saved to your personal health history</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span>Track health trends over time</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span>Personalized health insights</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* For Someone Else Option */}
-            <Card 
-              className={`cursor-pointer transition-all duration-200 ${
-                selectedOption === "other" 
-                  ? "border-blue-500 bg-blue-50 shadow-md" 
-                  : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
-              }`}
-              onClick={() => setSelectedOption("other")}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    {getOptionIcon("other")}
-                    <div>
-                      <CardTitle className="text-lg">{getOptionTitle("other")}</CardTitle>
-                      <CardDescription className="text-sm">
-                        {getOptionDescription("other")}
-                      </CardDescription>
-                    </div>
-                  </div>
-                  {getOptionBadge("other")}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span>One-time analysis only</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span>No personal data storage</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span>Anonymous processing</span>
-                </div>
-              </CardContent>
-            </Card>
+            {renderOption("self")}
+            {renderOption("other")}
           </div>
 
           <div className="flex gap-3 pt-4">

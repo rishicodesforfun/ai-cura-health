@@ -52,6 +52,11 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
             if (localVideoRef.current) {
               localVideoRef.current.srcObject = stream;
             }
+            // For demo purposes, mirror the local stream to the remote video
+            // so the user sees something instead of a black screen
+            if (remoteVideoRef.current) {
+              remoteVideoRef.current.srcObject = stream;
+            }
           })
           .catch(err => {
             console.error("Error accessing media devices:", err);
@@ -70,20 +75,63 @@ const VideoCall = ({ doctorName, specialty, onEndCall }: VideoCallProps) => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      
+      // Stop all media tracks to turn off camera/mic
+      if (localVideoRef.current && localVideoRef.current.srcObject) {
+        const stream = localVideoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
     };
   }, []);
 
   const toggleAudio = () => {
-    setIsAudioMuted(!isAudioMuted);
-    // In a real app, you would actually mute the audio track here
+    const newMutedState = !isAudioMuted;
+    setIsAudioMuted(newMutedState);
+    
+    if (localVideoRef.current && localVideoRef.current.srcObject) {
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      stream.getAudioTracks().forEach(track => {
+        track.enabled = !newMutedState;
+      });
+    }
+
+    toast({
+      title: newMutedState ? "Microphone Muted" : "Microphone Unmuted",
+      description: newMutedState ? "Others cannot hear you." : "Others can hear you now.",
+      variant: newMutedState ? "destructive" : "default",
+    });
   };
 
   const toggleVideo = () => {
-    setIsVideoMuted(!isVideoMuted);
-    // In a real app, you would actually turn off the video track here
+    const newMutedState = !isVideoMuted;
+    setIsVideoMuted(newMutedState);
+    
+    if (localVideoRef.current && localVideoRef.current.srcObject) {
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      stream.getVideoTracks().forEach(track => {
+        track.enabled = !newMutedState;
+      });
+    }
+
+    toast({
+      title: newMutedState ? "Camera Off" : "Camera On",
+      description: newMutedState ? "Others cannot see you." : "Others can see you now.",
+      variant: newMutedState ? "destructive" : "default",
+    });
   };
 
   const toggleRecording = () => {
+    if (isRecording) {
+      toast({
+        title: "Recording Stopped",
+        description: "The recording has been saved to your records.",
+      });
+    } else {
+      toast({
+        title: "Recording Started",
+        description: "This consultation is now being recorded.",
+      });
+    }
     setIsRecording(!isRecording);
   };
 

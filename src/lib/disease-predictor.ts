@@ -1,10 +1,4 @@
-import * as tf from '@tensorflow/tfjs';
-
-// Define types for our data
-interface Symptom {
-  name: string;
-  index: number;
-}
+import { Condition, Symptom } from "./types";
 
 interface Disease {
   name: string;
@@ -185,8 +179,6 @@ const DISEASE_INFO: Record<string, { description: string; severity: 'low' | 'med
 class DiseasePredictor {
   private symptoms: Symptom[] = [];
   private diseases: Disease[] = [];
-  private model: tf.LayersModel | null = null;
-  private isTrained: boolean = false;
 
   constructor() {
     this.initializeData();
@@ -312,24 +304,10 @@ class DiseasePredictor {
     }));
   }
 
-  // Convert symptoms to feature vector
-  private symptomsToVector(userSymptoms: string[]): number[] {
-    const vector = new Array(this.symptoms.length).fill(0);
-    
-    userSymptoms.forEach(symptom => {
-      const symptomObj = this.symptoms.find(s => s.name === symptom);
-      if (symptomObj) {
-        vector[symptomObj.index] = 1;
-      }
-    });
-    
-    return vector;
-  }
-
   // Simple rule-based prediction (since we can't train a full model in browser)
-  public predict(userSymptoms: string[]): { disease: string; confidence: number; description: string; severity: string }[] {
+  public predict(userSymptoms: string[]): { disease: string; confidence: number; description: string; severity: string; symptoms: string[] }[] {
     // Calculate similarity scores for each disease
-    const scores: { disease: string; score: number; description: string; severity: string }[] = [];
+    const scores: { disease: string; score: number; description: string; severity: string; symptoms: string[] }[] = [];
     
     this.diseases.forEach(disease => {
       let matchCount = 0;
@@ -356,7 +334,8 @@ class DiseasePredictor {
           disease: disease.name,
           score,
           description: disease.description,
-          severity: disease.severity
+          severity: disease.severity,
+          symptoms: disease.symptoms
         });
       }
     });
@@ -368,7 +347,8 @@ class DiseasePredictor {
       disease: item.disease,
       confidence: Math.round(item.score * 100),
       description: item.description,
-      severity: item.severity
+      severity: item.severity,
+      symptoms: item.symptoms
     }));
   }
 

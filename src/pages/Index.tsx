@@ -8,6 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Upload, User, Calendar, Weight, AlertTriangle, Info, Video } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { removeAuthToken } from "@/lib/jwt";
@@ -21,7 +28,7 @@ const Index = () => {
     weight: "",
     height: "",
     symptoms: "",
-    image: null as File | null,
+    image: null as string | null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showHealthModal, setShowHealthModal] = useState(false);
@@ -182,23 +189,19 @@ const Index = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="gender">Gender</Label>
-                    <select
-                      id="gender"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none pr-10"
+                    <Select
                       value={formData.gender}
-                      onChange={(e) => handleInputChange("gender", e.target.value)}
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'right 0.5rem center',
-                        backgroundSize: '1.5em 1.5em'
-                      }}
+                      onValueChange={(value) => handleInputChange("gender", value)}
                     >
-                      <option value="">Select gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
+                      <SelectTrigger id="gender">
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="height">Height (cm)</Label>
@@ -346,7 +349,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <Button 
-                  onClick={() => window.location.href = "/video-call"}
+                  onClick={() => navigate("/video-call")}
                   className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
                 >
                   Start Video Call
@@ -365,7 +368,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <Button 
-                  onClick={() => window.location.href = "/history"}
+                  onClick={() => navigate("/history")}
                   variant="outline"
                   className="w-full"
                 >

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,17 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ArrowLeft, 
   AlertTriangle, 
-  Pill, 
-  Calendar, 
-  ExternalLink,
-  User,
-  Clock,
   TrendingUp,
   Video,
-  Loader2
+  Loader2,
+  Calendar,
+  User
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { showSuccess } from "@/utils/toast";
 import DiseasePredictorComponent from "@/components/DiseasePredictor";
 
 interface DiagnosisResult {
@@ -40,16 +36,18 @@ const Results = () => {
   const [userGender, setUserGender] = useState("");
   const [userWeight, setUserWeight] = useState("");
   const [userHeight, setUserHeight] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleBack = () => {
     // Navigate back to the form page
-    window.location.href = "/";
+    navigate("/");
   };
 
   const handleBookConsultation = () => {
     // Navigate to video call page
-    window.location.href = "/video-call";
+    navigate("/video-call");
   };
 
   useEffect(() => {
@@ -64,6 +62,7 @@ const Results = () => {
         setUserSymptoms(lastRecord.symptoms);
         
         // Get user information
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const user = userData.find((u: any) => u.id === lastRecord.userId);
         if (user) {
           setUserAge(user.age || "");

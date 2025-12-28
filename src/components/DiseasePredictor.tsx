@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import geminiService from "@/lib/gemini-service";
+import { Condition } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,15 +18,6 @@ import {
   Loader2,
   Video
 } from "lucide-react";
-
-interface PredictionResult {
-  name: string;
-  confidence: number;
-  description: string;
-  severity: 'low' | 'medium' | 'high';
-  symptoms: string[];
-  recommendations: string[];
-}
 
 interface DiseasePredictorProps {
   userSymptoms: string;
@@ -44,15 +36,16 @@ const DiseasePredictorComponent = ({
   weight, 
   height 
 }: DiseasePredictorProps) => {
-  const [results, setResults] = useState<PredictionResult[]>([]);
+  const [results, setResults] = useState<Condition[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState("");
   const [nextSteps, setNextSteps] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleBookConsultation = () => {
     // Navigate to video call page
-    window.location.href = "/video-call";
+    navigate("/video-call");
   };
 
   useEffect(() => {

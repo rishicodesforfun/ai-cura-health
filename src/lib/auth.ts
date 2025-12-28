@@ -1,10 +1,14 @@
+import { User } from "./types";
+
 // Default users for demo purposes
-const DEFAULT_USERS = [
+// WARNING: In a real application, never store passwords in plain text!
+// This is a mock implementation using localStorage.
+const DEFAULT_USERS: User[] = [
   {
     id: "1",
     name: "John Doe",
     email: "john@example.com",
-    password: "password123",
+    password: "password123", // In a real app, this would be hashed
     createdAt: new Date().toISOString()
   },
   {
@@ -23,37 +27,59 @@ const DEFAULT_USERS = [
   }
 ];
 
+const STORAGE_KEY = "aicura_users";
+
 // Initialize localStorage with default users if empty
 export const initializeUsers = () => {
-  const users = localStorage.getItem("aicura_users");
-  if (!users) {
-    localStorage.setItem("aicura_users", JSON.stringify(DEFAULT_USERS));
+  if (typeof window === "undefined") return; // Server-side safety check
+  
+  try {
+    const users = localStorage.getItem(STORAGE_KEY);
+    if (!users) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
+    }
+  } catch (error) {
+    console.error("Failed to access localStorage:", error);
   }
 };
 
 // Get all users
-export const getUsers = () => {
-  const users = localStorage.getItem("aicura_users");
-  return users ? JSON.parse(users) : [];
+export const getUsers = (): User[] => {
+  if (typeof window === "undefined") return [];
+  
+  try {
+    const users = localStorage.getItem(STORAGE_KEY);
+    return users ? JSON.parse(users) : [];
+  } catch (error) {
+    console.error("Failed to get users:", error);
+    return [];
+  }
 };
 
 // Add a new user
-export const addUser = (user: any) => {
-  const users = getUsers();
-  users.push(user);
-  localStorage.setItem("aicura_users", JSON.stringify(users));
+export const addUser = (user: User) => {
+  if (typeof window === "undefined") return;
+  
+  try {
+    const users = getUsers();
+    users.push(user);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+  } catch (error) {
+    console.error("Failed to add user:", error);
+  }
 };
 
 // Find user by email
-export const findUserByEmail = (email: string) => {
+export const findUserByEmail = (email: string): User | undefined => {
   const users = getUsers();
-  return users.find((user: any) => user.email === email);
+  return users.find((user: User) => user.email === email);
 };
 
 // Find user by email and password
-export const findUserByEmailAndPassword = (email: string, password: string) => {
+export const findUserByEmailAndPassword = (email: string, password: string): User | undefined => {
   const users = getUsers();
-  return users.find((user: any) => user.email === email && user.password === password);
+  // Simple plain text comparison for demo
+  return users.find((user: User) => user.email === email && user.password === password);
 };
 
 // Get default credentials for demo
